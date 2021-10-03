@@ -1,0 +1,9 @@
+C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\obj\Debug\IEMP_Deploy.csproj.AssemblyReference.cache
+C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\obj\Debug\IEMP_Deploy.Form1.resources
+C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\obj\Debug\IEMP_Deploy.Properties.Resources.resources
+C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\obj\Debug\IEMP_Deploy.csproj.GenerateResource.cache
+C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\obj\Debug\IEMP_Deploy.csproj.CoreCompileInputs.cache
+C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\bin\Debug\IEMP_Deploy.exe
+C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\bin\Debug\IEMP_Deploy.pdb
+C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\obj\Debug\IEMP_Deploy.exe
+C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\obj\Debug\IEMP_Deploy.pdb

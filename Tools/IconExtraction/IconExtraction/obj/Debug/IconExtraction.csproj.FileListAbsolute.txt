@@ -1,0 +1,9 @@
+C:\Users\24773\source\repos\IconExtraction\IconExtraction\obj\Debug\IconExtraction.csproj.AssemblyReference.cache
+C:\Users\24773\source\repos\IconExtraction\IconExtraction\obj\Debug\IconExtraction.Form1.resources
+C:\Users\24773\source\repos\IconExtraction\IconExtraction\obj\Debug\IconExtraction.Properties.Resources.resources
+C:\Users\24773\source\repos\IconExtraction\IconExtraction\obj\Debug\IconExtraction.csproj.GenerateResource.cache
+C:\Users\24773\source\repos\IconExtraction\IconExtraction\obj\Debug\IconExtraction.csproj.CoreCompileInputs.cache
+C:\Users\24773\source\repos\IconExtraction\IconExtraction\bin\Debug\IconExtraction.exe
+C:\Users\24773\source\repos\IconExtraction\IconExtraction\bin\Debug\IconExtraction.pdb
+C:\Users\24773\source\repos\IconExtraction\IconExtraction\obj\Debug\IconExtraction.exe
+C:\Users\24773\source\repos\IconExtraction\IconExtraction\obj\Debug\IconExtraction.pdb

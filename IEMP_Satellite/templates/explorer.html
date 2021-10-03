@@ -1,0 +1,314 @@
+
+<!doctype html>
+<style>
+    .alert {
+    display: none;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    min-width: 10px;
+    margin-left: -100px;
+    z-index: 99999;
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+ctxt {
+    text-align: center;
+    line-height:3.5;
+    font-size: medium
+}
+.SearchBox{
+    text-align: center;
+}
+
+
+</style>
+
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Amaze UI Admin table Examples</title>
+  <meta name="description" content="这是一个 table 页面">
+  <meta name="keywords" content="table">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="icon" type="image/png" href="assets/i/favicon.png">
+  <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+  <link rel="stylesheet" href="assets/css/amazeui.min.css"/>
+  <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+<!--[if lte IE 9]>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
+  以获得更好的体验！</p>
+<![endif]-->
+
+<header class="am-topbar am-topbar-inverse admin-header">
+  <div class="am-topbar-brand">
+    <strong>信息化设备管理平台</strong> <small>IEMP Satellite</small>
+  </div>
+
+
+  <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+
+  </div>
+</header>
+
+<div class="am-cf admin-main">
+
+
+  <!-- content start -->
+<div class="alert"></div>
+  <div class="admin-content">
+    <div class="admin-content-body">
+      <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">主机列表</strong> / <small>Host Lists</small></div>
+      </div>
+
+      <hr>
+
+      <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-6" style="width: 30%">
+          <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-xs">
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
+                TotalItmes: <text id="TotalItmes"></text>
+                FilesTotalSize: <text id="FilesTotalSize"></text>
+            </div>
+          </div>
+        </div>
+        <div class="am-btn-group-xs" style="height:0px">
+            IP: <input disabled="disabled" id="IP" value="{{ IP }}"></input>
+            Dir: <input id="Dir" onkeydown="EnterToGet(event)"></input>
+            <button type="button" class="am-btn am-btn-default" onclick="GetFileList()">Jump</button>
+        </div>
+
+      </div>
+
+      <div class="am-g">
+        <div class="am-u-sm-12">
+          <form class="am-form">
+            <table class="am-table table-main" id="FileList">
+              <thead>
+              <tr>
+                <th class="table-check"><input type="checkbox" /></th>
+				<th class="table-id"></th>
+                <th class="table-title">Name</th>
+
+				<th class="table-type">Date modified</th>
+                <th class="table-type">FileType</th>
+                <th class="table-type">Size</th>
+				<th class="table-set">Oprations</th>
+              </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+
+            <hr />
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="admin-content-footer">
+      <hr>
+      <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+    </footer>
+
+  </div>
+  <!-- content end -->
+</div>
+
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+
+<footer>
+  <hr>
+  <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+</footer>
+
+<!--[if lt IE 9]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="assets/js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="assets/js/jquery.min.js"></script>
+<!--<![endif]-->
+<script src="assets/js/amazeui.min.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
+<script>
+$(window).on("load", function() {
+    GetFileList()
+});
+function SizeOP(size){
+    var unit = "Bytes"
+    if(size >= 4096){
+        size = size / 1024
+        unit = "KB"
+    }
+    if(size >= 4096){
+        size = size / 1024
+        unit = "MB"
+    }
+    if(size >= 4096){
+        size = size / 1024
+        unit = "GB"
+    }
+    if(size >= 4096){
+        size = size / 1024
+        unit = "TB"
+    }
+    if(unit === "Bytes" && size<=1){
+        unit = "Byte"
+    }
+    return size.toFixed(2) + " " + unit
+
+}
+function add0(m){return m<10?'0'+m:m }
+function TimeStapToTime(shijianchuo) {
+    var time = new Date(shijianchuo*1000);
+    var y = time.getFullYear();
+    var m = time.getMonth()+1;
+    var d = time.getDate();
+    var h = time.getHours();
+    var mm = time.getMinutes();
+    var s = time.getSeconds();
+    return y+'-'+add0(m)+'-'+add0(d)+' '+add0(h)+':'+add0(mm)+':'+add0(s);
+}
+function EnterToGet(event){
+    //console.log(event.keyCode)
+    if(event.keyCode==13){
+        GetFileList()
+    }
+}
+function RenewDir(element){
+    var AddText = element.innerText
+    var Direlement = document.getElementById("Dir")
+    var Dir = Direlement.value;
+    console.log(Dir)
+    console.log(Dir.substring(Dir.length-1,Dir.length))
+    if(Dir.substring(Dir.length-1,Dir.length) === "\\" || Dir === ""){
+        Direlement.value = Dir + AddText
+    }else{
+        Direlement.value = Dir + "\\" + AddText
+
+    }
+
+    GetFileList()
+}
+function GetFileList(){
+    var IP = document.getElementById("IP").value
+    var Dir = document.getElementById("Dir").value
+    //console.log($("#FileList tbody"))
+    var FilesTotalSize = 0;
+    $("#FileList tbody").html("")
+      $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: "/GetFileList",
+        data: { IP: IP, Dir: Dir}, //     D:\\test D:\\Desktop\\Desktop1_20210817
+        success: function(json) {
+
+          $.each(json, function(i, n) {
+              if(n.Type === 8){
+                  FilesTotalSize+=n.Size;
+                  var Suffix = n.Name.substring(n.Name.lastIndexOf("."),n.Name.length);
+                  var Size = SizeOP(n.Size);
+                  var Mtime = TimeStapToTime(n.Mtime);
+                  var Name = n.Name;
+              }else if(n.Type === 4){
+                  var Suffix = ".folder";
+                  var Size = "";
+                  var Mtime = TimeStapToTime(n.Mtime);
+                  var FileType = "Folder";
+
+                  var Name = '<a href="javascrips:;" onclick="RenewDir(this)">'+n.Name+"</a>";
+              }else if(n.Type > 128){
+                  var Suffix = ".vhdx";
+                  var Size = "";
+                  var Mtime = "";
+                  var Name = '<a href="javascrips:;" onclick="RenewDir(this)">'+n.Name+"</a>";
+
+                  if(n.Type==131){
+                      var FileType = "Loacl Disk";
+                  }else{
+                      var FileType = "Unknown Disk";
+                  }
+
+              }
+
+              $("#FileList").append("<tr>" +
+                  "<td><input type=\"checkbox\" /></td>"+
+                  '<td><img src="/assets/icons/'+Suffix+'.png" height="50" width="50" disabled></td>'+
+                  "<td>"+Name+"</td>" +
+                  "<td><ctxt>"+Mtime+"</ctxt></td>"+
+                  "<td><ctxt>"+FileType+"</ctxt></td>"+
+                  "<td><ctxt>"+Size+"</ctxt></td>"+
+                  '<td><ctxt><a href="index">Download</a></ctxt></td>'+
+                  "</tr>"
+              );
+
+
+          })
+            document.getElementById('TotalItmes').innerHTML = json.length;
+            document.getElementById('FilesTotalSize').innerHTML = SizeOP(FilesTotalSize);
+              /*
+            var tbBody = ""
+            var trColor;
+            if (i % 2 == 0) {
+              trColor = "even";
+            }
+            else {
+              trColor = "odd";
+            }
+            tbBody += "<tr class='" + trColor + "'><td>" + n.ModuleNum + "</td>" + "<td>" + n.ModuleName + "</td>" + "<td>" + n.ModuleDes + "</td></tr>";
+            $("#myTb").append(tbBody);
+          });*/
+        },
+        error: function(json) {
+          alert("失败");
+        }
+      });
+
+
+}
+function AutoDisappearNotification(Content){
+    $('.alert').html(Content).addClass('alert-success').show().delay(1500).fadeOut();
+}
+</script>

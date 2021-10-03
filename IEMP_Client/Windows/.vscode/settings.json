@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "cmath": "cpp",
+        "*.tcc": "cpp",
+        "md5.c": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
+}

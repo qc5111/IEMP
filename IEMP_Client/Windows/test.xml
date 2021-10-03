@@ -1,0 +1,6 @@
+<service>
+  <id>IEMPClient</id>
+  <name>IEMPClient</name>
+  <description>IEMP Client</description>
+  <executable>IEMP_Client</executable>
+</service>
