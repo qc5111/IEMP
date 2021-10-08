@@ -7,3 +7,12 @@ C:\Users\24773\source\repos\IconExtraction\IconExtraction\bin\Debug\IconExtracti
 C:\Users\24773\source\repos\IconExtraction\IconExtraction\bin\Debug\IconExtraction.pdb
 C:\Users\24773\source\repos\IconExtraction\IconExtraction\obj\Debug\IconExtraction.exe
 C:\Users\24773\source\repos\IconExtraction\IconExtraction\obj\Debug\IconExtraction.pdb
+D:\Plymouth\COMP3000\IEMP\Tools\IconExtraction\IconExtraction\bin\Debug\IconExtraction.exe
+D:\Plymouth\COMP3000\IEMP\Tools\IconExtraction\IconExtraction\bin\Debug\IconExtraction.pdb
+D:\Plymouth\COMP3000\IEMP\Tools\IconExtraction\IconExtraction\obj\Debug\IconExtraction.csproj.AssemblyReference.cache
+D:\Plymouth\COMP3000\IEMP\Tools\IconExtraction\IconExtraction\obj\Debug\IconExtraction.Form1.resources
+D:\Plymouth\COMP3000\IEMP\Tools\IconExtraction\IconExtraction\obj\Debug\IconExtraction.Properties.Resources.resources
+D:\Plymouth\COMP3000\IEMP\Tools\IconExtraction\IconExtraction\obj\Debug\IconExtraction.csproj.GenerateResource.cache
+D:\Plymouth\COMP3000\IEMP\Tools\IconExtraction\IconExtraction\obj\Debug\IconExtraction.csproj.CoreCompileInputs.cache
+D:\Plymouth\COMP3000\IEMP\Tools\IconExtraction\IconExtraction\obj\Debug\IconExtraction.exe
+D:\Plymouth\COMP3000\IEMP\Tools\IconExtraction\IconExtraction\obj\Debug\IconExtraction.pdb

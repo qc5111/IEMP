@@ -36,7 +36,7 @@ namespace IconExtraction
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(590, 281);
+            this.button1.Location = new System.Drawing.Point(412, 211);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(141, 79);
             this.button1.TabIndex = 0;
@@ -46,7 +46,7 @@ namespace IconExtraction
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(78, 82);
+            this.pictureBox1.Location = new System.Drawing.Point(26, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(342, 278);
             this.pictureBox1.TabIndex = 1;
@@ -56,7 +56,7 @@ namespace IconExtraction
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(578, 310);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.button1);
             this.Name = "Form1";

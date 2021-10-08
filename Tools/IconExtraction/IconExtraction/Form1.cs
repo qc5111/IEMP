@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -35,24 +36,37 @@ namespace IconExtraction
             if (hIcons[0] == IntPtr.Zero) {
                 return false;
             }
-            //MessageBox.Show(SuccessCount.ToString());
 
             Icon ico = Icon.FromHandle(hIcons[0]);
+            
             Bitmap IconSave = ico.ToBitmap();
+            
+            //pictureBox1.Image = IconSave;
             IconSave.Save(SavePath, ImageFormat.Png);
             //MessageBox.Show("SaveOK");
+            ico.Dispose();
+            IconSave.Dispose();
             return true;
         }
         
         private void button1_Click(object sender, EventArgs e)
         {
-            const string SavePath = "D:\\Desktop\\Desktop1_20210817\\图标提取\\temp\\";
+            string SavePath = "D:\\Desktop\\Desktop1_20210817\\Pygame\\";
+            SaveICONAsPNG("D:\\Desktop\\Desktop1_20210817\\Pygame\\Graphics\\y.ico", 0, SavePath + "test.png");
+
+            return;
+            SavePath = ".\\Icons\\";
+            if (!Directory.Exists(SavePath)){
+                Directory.CreateDirectory(SavePath);
+            }
+            
 
             
             RegistryKey CLASSES_ROOT = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\\Classes\\");
             object SubKeyValue;
             RegistryKey SubKeyValue2;
             string[] ICOPathListArray;
+            //SaveICONAsPNG("C:\\Windows\\System32\\imageres.dll", 85, SavePath + ".pdf.png");
             foreach (string keyname in CLASSES_ROOT.GetSubKeyNames()) {
                 //Console.WriteLine(keyname.Substring(0, 1));
                 if (keyname.Substring(0, 1) == "."){
@@ -84,8 +98,10 @@ namespace IconExtraction
 
 
                         }
-                        SaveICONAsPNG("C:\\Windows\\System32\\SHELL32.dll", 4, SavePath + ".folder.png");
-                        
+
+
+
+
                         //Console.WriteLine();
                         //MessageBox.Show();
                     }
@@ -94,17 +110,15 @@ namespace IconExtraction
 
 
             }
-                
+            SaveICONAsPNG("C:\\Windows\\System32\\SHELL32.dll", 4, SavePath + ".folder.png");
+            SaveICONAsPNG("C:\\Windows\\System32\\imageres.dll", 2, SavePath + ".empty.png");
+            SaveICONAsPNG("C:\\Windows\\System32\\imageres.dll", 11, SavePath + ".exe.png");
+            SaveICONAsPNG("C:\\Windows\\System32\\imageres.dll", 85, SavePath + ".pdf.png");
+            SaveICONAsPNG("C:\\Windows\\System32\\SHELL32.dll", 29, SavePath + ".lnk.png");
 
 
 
 
-
-
-
-            string Path = "C:\\Program Files (x86)\\Microsoft Office\\Root\\VFS\\Windows\\Installer\\{90160000-000F-0000-0000-0000000FF1CE}\\xlicons.exe";
-            int ID = 0;
-            //SaveICONAsPNG(Path, ID, SavePath + "xlsx.png");
 
 
 
