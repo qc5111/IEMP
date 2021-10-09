@@ -11,20 +11,23 @@ static int GLOBAL_TIME_DIFF;
 #include "UDP.cpp"
 #include "gzip.cpp"
 UDP UDP;
+char EID[4];//EquiptmentID
 #include "PerformanceMonitor.cpp"
-
+#include "HeartBeat.cpp"
 //全局变量声明
 
-void* HeartBeat(void* args){
-    while(true){
-        UDP.SendData("HeartBeat",9);
-        Sleep(10000);
-    }
-}
+
 int GetTimeDiff(){
     TIME_ZONE_INFORMATION tzi;
-    GetTimeZoneInformation(&tzi);
-	return tzi.Bias*60;
+    int ret = GetTimeZoneInformation(&tzi);
+    //printf("ret:%d,tzi.DaylightBias:%d\n",ret,tzi.DaylightBias);
+    if(ret == 2){//中国时区为0，斐济时区为1，伦敦时区为2
+        return (tzi.Bias+tzi.DaylightBias)*60;
+    }else{
+        return tzi.Bias*60;
+    }
+    
+	
 }
 int main(int argc,char *argv[])//RealMain main
 {
@@ -42,14 +45,18 @@ int main(int argc,char *argv[])//RealMain main
     fp = fopen(argv[0],"rb");
     fseek(fp, -32L, SEEK_END);
     fread(Configs,1,32,fp);
+    //读取EID
+    memcpy(EID,Configs+16,4);
     //for(int i=0;i<32;i++){printf("%d,",i);printf("%02x\n",Configs[i]);}printf("\n");
-    IP.s_addr = Configs[16]+Configs[17]*256+Configs[18]*256*256+Configs[19]*256*256*256;
-    printf("%s\n",inet_ntoa(IP));
+    //读取IP
+    IP.s_addr = Configs[20]+(Configs[21]<<8)+(Configs[22]<<16)+(Configs[23]<<24);
+    //printf("%s\n",inet_ntoa(IP));
 	//unsigned char password[20] ="0123456789abcdef"; // 0123456789abcdef
     UDP.Init(inet_ntoa(IP));
     RemoteCMD RemoteCMD(Configs);
     //初始化全局变量
     GLOBAL_TIME_DIFF = GetTimeDiff();
+    //printf("GLOBAL_TIME_DIFF:%d",GLOBAL_TIME_DIFF);
     //初始化心跳
     
     pthread_t ThreadHeartBeat;

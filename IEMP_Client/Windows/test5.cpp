@@ -20,6 +20,7 @@ __int64 CompareFileTime2(const FILETIME &preTime, const FILETIME &nowTime)
 long long int GetMemoryFreeSize() {
     MEMORYSTATUSEX memStatus;
     memStatus.dwLength = sizeof(memStatus);
+    
     GlobalMemoryStatusEx(&memStatus);
     long long int FreeMemory = memStatus.ullTotalPhys - memStatus.ullAvailPhys;
     return FreeMemory;
@@ -47,46 +48,7 @@ double getCpuUsage()
  
     return 1.0*(kernel + user - idle) / (kernel + user);
 }
-struct cpuid_res {
-unsigned int eax;
 
-unsigned int ebx;
-
-unsigned int ecx;
-
-unsigned int edx;
-
-};
-void GetCPUTemp(int op){
-    struct cpuid_res result;
-
-asm volatile(
-
-"mov %%ebx, %%edi;"
-
-"cpuid;"
-
-"mov %%ebx, %%esi;"
-
-"mov %%edi, %%ebx;"
-
-: "=a" (result.eax),
-
-"=S" (result.ebx),
-
-"=c" (result.ecx),
-
-"=d" (result.edx)
-
-: "0" (op)
-
-: "edi");
-printf("result.eax:%d,",result.eax);
-printf("result.ebx:%d,",result.ebx);
-printf("result.ecx:%d,",result.ecx);
-printf("result.edx:%d\n",result.edx);
-return;
-}
 int main(){
     GetCPUTemp(1);
     double Testdouble,Memory;
