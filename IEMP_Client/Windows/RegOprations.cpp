@@ -1,6 +1,5 @@
 #include <windows.h>
 #include <stdio.h>
-#include <string.h>
 
 
 char * RegReadSZ(HKEY RootKey,char * Path, char * Key, int *ret){
@@ -31,7 +30,8 @@ long long int RegReadllInt(HKEY RootKey,char * Path, char * Key, int *ret){
 
 /*int main(){
     int ret;
-    char *Data = RegReadSZ(HKEY_CURRENT_USER,"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders","Desktop",&ret);
+    //char *Data = RegReadSZ(HKEY_CURRENT_USER,"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders","Desktop",&ret);
+    char *Data = RegReadSZ(HKEY_LOCAL_MACHINE,"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion","ProductName",&ret);
     printf("ret:%d,Datalen:%d,Data:%s",ret,strlen(Data),Data);
     //unsigned long long int Data = RegReadllInt(HKEY_LOCAL_MACHINE,"Software\\Microsoft\\Windows\\CurrentVersion\\Run","test",&ret);
     //printf("ret:%d,Data:%llu",ret,Data);

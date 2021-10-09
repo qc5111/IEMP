@@ -8,4 +8,4 @@ s.bind(("0.0.0.0", 48281))
 while True:
     data, addr = s.recvfrom(1024)
     print("Receive from %s:%s" % addr)
-    print("data:"+data.decode())
+    print(data)

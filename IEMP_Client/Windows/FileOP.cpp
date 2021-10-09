@@ -113,6 +113,7 @@ char * GetDrivers(){
     Flist = (char *)malloc(1024);
     int Nowlen = 4;
     UINT DiskType;
+    
     for(char letter = 'A'; letter <= 'Z'; letter++){
         sprintf(rootPath, "%c:\\", letter);  
         
@@ -135,6 +136,11 @@ char * GetDrivers(){
     memcpy(Flist,&Nowlen,4);
     return Flist;
 }
+/*int main(){
+    _ULARGE_INTEGER Size1,Size2;
+    GetDiskFreeSpaceEx("C:\\",&Size1,&Size2,NULL);
+    printf("Size1:%lld,Size2:%lld,Size3:%lld\n",Size1.QuadPart,Size2.QuadPart);
+}*/
 /*int main(int argc,char *argv[]){
     char *FileList = GetDrivers();
     //char TestLongLong[16];
