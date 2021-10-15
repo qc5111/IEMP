@@ -1,16 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<time.h>
-#include "md5.c"
-
-
-//#include<windows.h>
-//static int GLOBAL_TIME_DIFF;
-
-//#include <cstring>
-
+#include "PublicHead.h"
 int charcmp(char * char1,char * char2, int len){
 	for(int i;i<len;i++){
 		if(char1[i]!=char2[i]){
@@ -19,18 +7,15 @@ int charcmp(char * char1,char * char2, int len){
 	}
 	return 0;
 }
-void DynamicPassword(unsigned char * encrypt,unsigned char * code,int len,int timeDiff)
+void DynamicPassword(unsigned char * code,int len,int timeDiff)//unsigned char * encrypt,
 {
 	time_t t = time(NULL);
 	unsigned char MD5Encrypted[16];
+    unsigned char encrypt[20];
 	int i2 = 0;
 	int timestap = (int)((time(&t) + GLOBAL_TIME_DIFF)/ 30) + timeDiff;
-	//printf("time:%d\n", (int)((time(&t) + GLOBAL_TIME_DIFF)));
-	//encrypt[16] = timestap / 16777216;
-	//encrypt[17] = timestap / 65536;
-	//encrypt[18] = timestap / 256;
-	//encrypt[19] = timestap % 256;
-	memcpy(encrypt+16,&timestap,4);
+    memcpy(encrypt,Configs,16);
+    memcpy(encrypt+16,&timestap,4);
     MD5_CTX md5;
     MD5Init(&md5);
 	
@@ -53,17 +38,17 @@ void DynamicPassword(unsigned char * encrypt,unsigned char * code,int len,int ti
 	}
 
 }
-int CheckPassword(unsigned char * encrypt,unsigned char * code,int len){// 0 True, 1 False
+int CheckPassword(unsigned char * code,int len){// 0 True, 1 False unsigned char * encrypt,
 	unsigned char CalcCode[8];
-	DynamicPassword(encrypt,CalcCode,8,0);
+	DynamicPassword(CalcCode,8,0);
 	if(charcmp((char*)code, (char*)CalcCode,8) == 0){
 		return 0;
 	}
-	DynamicPassword(encrypt,CalcCode,8,-1);// Time difference
+	DynamicPassword(CalcCode,8,-1);// Time difference
 	if(charcmp((char*)code, (char*)CalcCode,8) == 0){
 		return 0;
 	}
-	DynamicPassword(encrypt,CalcCode,8,1);
+	DynamicPassword(CalcCode,8,1);
 	if(charcmp((char*)code, (char*)CalcCode,8) == 0){
 		return 0;
 	}

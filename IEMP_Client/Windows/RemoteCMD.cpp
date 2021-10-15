@@ -1,11 +1,4 @@
-#include <winsock2.h>
-#include <windows.h>
-#include <stdio.h>
-#include <io.h>
-#include <pthread.h>
-#pragma comment(lib,"ws2_32.lib")
-
-//#include "DynamicPassword.c"
+#include "PublicHead.h"
 HWND GetHwndByPid(DWORD dwProcessID)
 {
     HWND h = GetTopWindow(0);
@@ -53,7 +46,6 @@ class RemoteCMD{
         SOCKET slisten;
         pthread_t ThreadPipeRead;
         int StopSign1 = 0, StopSign2 = 0;
-        unsigned char *Password;
 
         static void* MainServer(void *ClassName){
             RemoteCMD *p=(RemoteCMD *)ClassName;
@@ -108,7 +100,7 @@ class RemoteCMD{
                 //密码验证
                 ret = recv(p->sClient, revData, 512, 0);
                 revData[ret] = 0;
-                if(CheckPassword(p->Password,(unsigned char*)revData,8)!=0){
+                if(CheckPassword((unsigned char*)revData,8)!=0){
                     closesocket(p->sClient);
                     continue;
                 }
@@ -162,10 +154,6 @@ class RemoteCMD{
             }
 
             return (void*)0;
-        }
-        RemoteCMD(unsigned char * password){
-            Password = password;
-            
         }
         void start(){
             StopSign1 = 1;

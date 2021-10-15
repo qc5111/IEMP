@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <cstdlib>
-#include <windows.h>
+#include "PublicHead.h"
 long long GetFileSize(char * FilePath){
     struct _stat64 File;
     //printf("Disk:%c:\n", buf.st_dev + 'A');

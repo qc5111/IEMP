@@ -31,7 +31,7 @@ class FileOP:
         tcp_client_socket = self.NormalOrderSend(
             b'\x01\x00' + RemoteSavePath.encode(self.Encoding) + b"\x00" + struct.pack('<Q', FileSize))
         fr = open(FilePath, "rb")
-        tcp_client_socket.recv(2)
+        tcp_client_socket.recv(1)
         while True:
             FileData = fr.read(1024)
             if FileData == b"":
@@ -54,15 +54,15 @@ class FileOP:
             Data = tcp_client_socket.recv(1024)
             # print(Data)
             ByteArr.append(Data)
-        data = b"".join(ByteArr)[:-2]
+        data = b"".join(ByteArr)
 
         # print(len(data))
         # print()
-        # print(gzip.decompress(data))
         # print(len(data))
         # print(data)
+        # print(data)
         FileList = zlib.decompress(data)
-        print(FileList)
+        # print(FileList)
         # FileList = data
         FileDictArr = []
         Pos = 0
@@ -83,8 +83,9 @@ class FileOP:
                 Mtime = struct.unpack("<I", FileList[Pos + 1:Pos + 5])[0]
                 Pos += 4
                 Size = \
-                struct.unpack("<Q", FileList[Pos + 2:Pos + 1 + FileList[Pos + 1]] + b"\x00" * (9 - FileList[Pos + 1]))[
-                    0]
+                    struct.unpack("<Q",
+                                  FileList[Pos + 2:Pos + 1 + FileList[Pos + 1]] + b"\x00" * (9 - FileList[Pos + 1]))[
+                        0]
                 Pos += FileList[Pos + 1]
                 FileDictArr.append(
                     {"Type": 8, "Name": FileList[Pos + 2:Pos + 2 + FileList[Pos + 1]].decode(self.Encoding),
@@ -93,7 +94,8 @@ class FileOP:
                 # print(Size)
             elif FileList[Pos] > 128:
                 FileDictArr.append(
-                    {"Type": FileList[Pos], "Name": FileList[Pos + 2:Pos + 2 + FileList[Pos + 1]].decode(self.Encoding)})
+                    {"Type": FileList[Pos],
+                     "Name": FileList[Pos + 2:Pos + 2 + FileList[Pos + 1]].decode(self.Encoding)})
                 Pos += FileList[Pos + 1] + 2
             # print(Pos,MaxPos)
             # print(len(FileDictArr))

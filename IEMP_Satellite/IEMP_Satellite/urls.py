@@ -20,6 +20,7 @@ from . import SystemOperation
 from . import BitTorrent
 from . import explorer
 from . import ajax
+from . import test
 urlpatterns = [
     path('', index.index),
     path('index', index.index),
@@ -29,4 +30,5 @@ urlpatterns = [
     path('explorer', explorer.explorer),
     path('GetFileList', ajax.GetFileList),
     path('RPC', BitTorrent.test),
+    path('Test', test.test),
 ]

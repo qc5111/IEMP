@@ -1,5 +1,5 @@
-import pipe
-import DynamicPassword
+from . import pipe
+from . import DynamicPassword
 class DiskOP:
     DiskArray = []
     VolumeArray = []

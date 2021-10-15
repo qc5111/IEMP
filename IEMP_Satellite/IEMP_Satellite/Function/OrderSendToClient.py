@@ -5,6 +5,9 @@ import struct
 
 import datetime
 
+from ..settings import DefaultFilePath
+
+
 class WinClient:
     IP = ""
     Password = ""
@@ -25,11 +28,12 @@ class WinClient:
         return tcp_client_socket
 
     def SendFile(self, FilePath, RemoteSavePath):
+        FilePath = DefaultFilePath + FilePath;
         FileSize = os.path.getsize(FilePath)
         tcp_client_socket = self.NormalOrderSend(
             b'\x01\x00' + RemoteSavePath.encode(self.Encoding) + b"\x00" + struct.pack('<Q', FileSize))
         fr = open(FilePath, "rb")
-        tcp_client_socket.recv(2)
+        tcp_client_socket.recv(1)
         while True:
             FileData = fr.read(1024)
             if FileData == b"":
@@ -37,9 +41,10 @@ class WinClient:
             tcp_client_socket.send(FileData)
         tcp_client_socket.recv(10)
         tcp_client_socket.close()
+
     def SendOneCMDOrder(self, order):
         self.NormalOrderSend(b'\x00\x06' + order.encode(self.Encoding))
-        
+
     def ExecMultipleOrder(self, orders):
         fw = open("Files\\order.temp.file", "wb")
         for i in orders:
@@ -47,18 +52,18 @@ class WinClient:
         fw.close()
         # print("Files\\order.temp.file", '"%sTemp\\order.bat"' % self.RootPath)
         self.SendFileToIEMPRoot("Files\\order.temp.file", 'Temp\\order.bat')
-        #self.NormalOrderSend(b'\x00\x06' + ('"%sTemp\\order.bat"' % TestClient.RootPath).encode(TestClient.Encoding))
+        # self.NormalOrderSend(b'\x00\x06' + ('"%sTemp\\order.bat"' % TestClient.RootPath).encode(TestClient.Encoding))
         self.SendOneCMDOrder('"%sTemp\\order.bat"' % self.RootPath)
-        
+
     def SendFileToIEMPRoot(self, FilePath, RemoteSavePath):
-        self.SendFile(FilePath, "%s%s" % (self.RootPath,RemoteSavePath))
-        
+        self.SendFile(FilePath, "%s%s" % (self.RootPath, RemoteSavePath))
+
     def Init7zip(self):  # 初始化7zip
-        #self.NormalOrderSend(b'\x00\x06' + ('mkdir "%sTools\\"' % self.RootPath).encode(self.Encoding))
+        # self.NormalOrderSend(b'\x00\x06' + ('mkdir "%sTools\\"' % self.RootPath).encode(self.Encoding))
         self.SendOneCMDOrder('mkdir "%sTools\\"' % self.RootPath)
-        #self.SendFile("Files\\7za.exe.file", "%sTools\\7za.exe" % self.RootPath)
-        self.SendFileToIEMPRoot("Files\\7za.exe.file","Tools\\7za.exe")
-        
+        # self.SendFile("Files\\7za.exe.file", "%sTools\\7za.exe" % self.RootPath)
+        self.SendFileToIEMPRoot("7za.exe.file", "Tools\\7za.exe")
+
     def InitPython(self):
         # self.NormalOrderSend(b'\x00\x06' + ('mkdir "%sTemp\\"' % self.RootPath).encode(self.Encoding))
         self.SendOneCMDOrder('mkdir "%sTemp\\"' % self.RootPath)
@@ -69,16 +74,15 @@ class WinClient:
         # self.SendFile("Files\\python39.lib.zip.file", "%sTools\\python\\python39.zip" % self.RootPath)
         self.SendFileToIEMPRoot("Files\\python39.lib.zip.file", "Tools\\python\\python39.zip")
 
-
-#TestClient = WinClient("10.0.1.123", b"0123456789abcdef")
+# TestClient = WinClient("10.0.1.123", b"0123456789abcdef")
 # TestClient.SendFile("Files\\7za.exe.file", "x:\\7za.exe")
 # print("OK")
-#TestClient = WinClient("10.0.1.250", "0123456789abcdef")
-#TestClient.Init7zip()
-#TestClient.InitPython()
+# TestClient = WinClient("10.0.1.250", "0123456789abcdef")
+# TestClient.Init7zip()
+# TestClient.InitPython()
 # TestClient.ExecMultipleOrder(['"python.exe" "%sPyScript\\test.py"' % (TestClient.RootPath)])
 # TestClient.ExecMultipleOrder(['C:\\IEMP_Client\\Test2\\RunAPP.exe'])
 # TestClient.ExecMultipleOrder(['C:\\Windows\\notepad.exe'])
 # TestClient.ExecMultipleOrder(['taskkill /im chrome.exe'])
 # TestClient.ExecMultipleOrder(b'\x00\x06'+'taskkill /im wechat.exe'.encode(TestClient.Encoding))
-#TestClient.NormalOrderSend(b'\x00\x06' + ('python C:\\IEMP_Client\\Test\\test.py').encode(TestClient.Encoding))
+# TestClient.NormalOrderSend(b'\x00\x06' + ('python C:\\IEMP_Client\\Test\\test.py').encode(TestClient.Encoding))

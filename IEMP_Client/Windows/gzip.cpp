@@ -1,9 +1,4 @@
-//#include <stdio.h>
-//#include <string.h>
-//#include <malloc.h>
-
-#include "zlib.h"
-
+#include "PublicHead.h"
 void data_compress(unsigned char *RawData, int RawDataLen,unsigned char *ResultData, int *ResultDataLen)
 {
     
