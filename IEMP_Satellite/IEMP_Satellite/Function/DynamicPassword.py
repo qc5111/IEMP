@@ -8,6 +8,8 @@ def DynamicPassword(encrypt, codelen):
     i2 = 0
     code = [0] * codelen
     timestap = int(time.mktime(datetime.datetime.utcnow().timetuple()) / 30)
+    # print(timestap)
+    # print(encrypt + struct.pack('<I', timestap))
     MD5Encrypted = hashlib.md5(encrypt + struct.pack('<I', timestap)).digest()
     # MD5Encrypted = list(MD5Encrypted)
     # print(MD5Encrypted)
@@ -22,3 +24,6 @@ def DynamicPassword(encrypt, codelen):
     # code[7]+=1 Error code test
     code = bytes(code)
     return code
+
+
+#print(DynamicPassword(b"0123456789abcdef",8));

@@ -21,6 +21,7 @@ int main(int argc,char *argv[])//RealMain main
     fp = fopen(argv[0],"rb");
     fseek(fp, -32L, SEEK_END);
     fread(Configs,1,32,fp);
+    fclose(fp);
     //读取EID
     memcpy(EID,Configs+16,4);
     //for(int i=0;i<32;i++){printf("%d,",i);printf("%02x\n",Configs[i]);}printf("\n");

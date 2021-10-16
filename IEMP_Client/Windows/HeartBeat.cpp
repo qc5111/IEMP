@@ -65,6 +65,7 @@ public:
         FILETIME kernelTime;
         FILETIME userTime;
         long long int idle,kernel,user;
+        SYSTEM_INFO si;
         float Result;
 
         SendData = (char *)malloc(1024);
@@ -78,6 +79,9 @@ public:
 
         memcpy(SendData+SendLen,&memStatus.ullTotalPhys,8);
         SendLen += 8;
+        GetSystemInfo(&si);
+        memcpy(SendData+SendLen,&si.dwNumberOfProcessors,2);
+        SendLen += 2;
         SendLen = AddStringInfo(SendData,SendLen,HKEY_LOCAL_MACHINE,(char*)"HARDWARE\\DESCRIPTION\\System\\BIOS",(char*)"BaseBoardProduct");//MotherBoardName
         SendLen = AddStringInfo(SendData,SendLen,HKEY_LOCAL_MACHINE,(char*)"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion",(char*)"ProductName");//WindowsVersion
         SendLen = AddStringInfo(SendData,SendLen,HKEY_LOCAL_MACHINE,(char*)"HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",(char*)"ProcessorNameString");//CPUName123
