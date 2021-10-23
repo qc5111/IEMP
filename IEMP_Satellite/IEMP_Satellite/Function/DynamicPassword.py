@@ -1,5 +1,4 @@
 import hashlib
-import datetime
 import time
 import struct
 
@@ -7,7 +6,7 @@ import struct
 def DynamicPassword(encrypt, codelen):
     i2 = 0
     code = [0] * codelen
-    timestap = int(time.mktime(datetime.datetime.utcnow().timetuple()) / 30)
+    timestap = int(int(time.time()) / 30)
     # print(timestap)
     # print(encrypt + struct.pack('<I', timestap))
     MD5Encrypted = hashlib.md5(encrypt + struct.pack('<I', timestap)).digest()

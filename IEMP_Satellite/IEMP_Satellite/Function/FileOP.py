@@ -11,7 +11,7 @@ class FileOP:
     IP = ""
     Password = ""
     RootPath = "C:\\IEMP_Client\\"
-    Encoding = "GB2312"
+    Encoding = "UTF-8"
 
     def __init__(self, IP, Password):
         self.IP = IP
@@ -59,17 +59,20 @@ class FileOP:
         # print(len(data))
         # print()
         # print(len(data))
-        # print(data)
+        #print(data)
         # print(data)
         FileList = zlib.decompress(data)
-        # print(FileList)
+        #print(FileList)
         # FileList = data
         FileDictArr = []
         Pos = 0
         MaxPos = len(FileList)
         # print(ByteArr)
         while True:
+            #print(FileDictArr)
+            #print(FileList[Pos])
             if Pos == MaxPos:
+                #print("Return")
                 return FileDictArr
             if FileList[Pos] == 4:
                 Mtime = struct.unpack("<I", FileList[Pos + 1:Pos + 5])[0]

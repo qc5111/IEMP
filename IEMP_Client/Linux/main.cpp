@@ -29,12 +29,19 @@ int main(int argc,char *argv[])
 
 
     //初始化全局变量
-    GLOBAL_TIME_DIFF = GetTimeDiff();
-
-
+    unsigned char CalcCode[8];
+    //GLOBAL_TIME_DIFF = GetTimeDiff();
+    DynamicPassword(CalcCode,8,0);
+    //printf("GLOBAL_TIME_DIFF:%d\n",GLOBAL_TIME_DIFF);
+    //for(int i=0;i<8;i++){printf("%02x,",CalcCode[i]);}printf("\n");
+    //return 0;
+    HeartBeat.Start();
+    TcpServer.Start();
     //测试
-    HeartBeat.start();
 
-    getchar();
+    while(true){
+        sleep(1000);
+    }
+    //getchar();
     return 0;
 }

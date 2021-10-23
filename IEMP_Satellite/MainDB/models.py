@@ -19,6 +19,8 @@ class Machine(models.Model):
     User = models.CharField(max_length=16)  # Device user or owner
     Status = models.IntegerField(default=0)
     LastUpdateTime = models.DateTimeField(default=timezone.now)  # TimeStamp
+    # 编码
+    # 操作系统类型
 
 
 class TorrentList(models.Model):

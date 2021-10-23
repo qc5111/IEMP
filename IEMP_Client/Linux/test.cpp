@@ -1,79 +1,49 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-typedef struct cpu_occupy_          //定义一个cpu occupy的结构体
-{
-    char name[20];                  //定义一个char类型的数组名name有20个元素
-    unsigned int user;              //定义一个无符号的int类型的user
-    unsigned int nice;              //定义一个无符号的int类型的nice
-    unsigned int system;            //定义一个无符号的int类型的system
-    unsigned int idle;              //定义一个无符号的int类型的idle
-    unsigned int iowait;
-    unsigned int irq;
-    unsigned int softirq;
-}cpu_occupy_t;
-
-double cal_cpuoccupy (cpu_occupy_t *o, cpu_occupy_t *n)
-{
-    double od, nd;
-    double id, sd;
-    double cpu_use ;
-
-    od = (double) (o->user + o->nice + o->system +o->idle+o->softirq+o->iowait+o->irq);//第一次(用户+优先级+系统+空闲)的时间再赋给od
-    nd = (double) (n->user + n->nice + n->system +n->idle+n->softirq+n->iowait+n->irq);//第二次(用户+优先级+系统+空闲)的时间再赋给od
-
-    id = (double) (n->idle);    //用户第一次和第二次的时间之差再赋给id
-    sd = (double) (o->idle) ;    //系统第一次和第二次的时间之差再赋给sd
-    if((nd-od) != 0)
-        cpu_use =100.0 - ((id-sd))/(nd-od)*100.00; //((用户+系统)乖100)除(第一次和第二次的时间差)再赋给g_cpu_used
-    else
-        cpu_use = 0;
-    return cpu_use;
+#include <pthread.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <cstdlib>
+#include <time.h>
+#include <cstring>
+#include<sys/socket.h>
+#include <sys/time.h>
+int GetTimeDiff(){
+    time_t UTCTimeStap, NowTimeStap;
+    struct tm *UTCTm;
+    NowTimeStap = time(NULL);
+    UTCTm = gmtime(&NowTimeStap);
+    UTCTimeStap = mktime(UTCTm);
+    return UTCTimeStap-NowTimeStap;
 }
+int main (){
+                    /* 获取本地utc时间 */
+                    struct timeval tv;
+                    struct timezone tz;
+                    int ret=gettimeofday(&tv,  &tz);
+    time_t NowTimeStap = time(NULL);
+                    printf("NowTimeStap:%d\n",NowTimeStap);
+                    printf("ret:%d\ntz.tz_minuteswest:%d\ntz.tz_dsttime:%d\n",ret,tz.tz_minuteswest,tz.tz_dsttime);
+                    /* utc时间 单位 秒*/
+                    long long timestamp = tv.tv_sec;
+                    printf("timestamp:%lld\n",timestamp);
 
-void get_cpuoccupy (cpu_occupy_t *cpust)
-{
-    FILE *fd;
-    int n;
-    char buff[256];
-    cpu_occupy_t *cpu_occupy;
-    cpu_occupy=cpust;
+                    /* utc时间 单位 毫秒 */
+                    timestamp = tv.tv_sec*1000 + tv.tv_usec/1000;
 
-    fd = fopen ("/proc/stat", "r");
-    if(fd == NULL)
-    {
-        perror("fopen:");
-        exit (0);
-    }
-    fgets (buff, sizeof(buff), fd);
+                    /* utc时间 单位 微秒 */
+                    timestamp = tv.tv_sec*1000*1000 + tv.tv_usec;
 
-    sscanf (buff, "%s %u %u %u %u %u %u %u", cpu_occupy->name, &cpu_occupy->user, &cpu_occupy->nice,&cpu_occupy->system, &cpu_occupy->idle ,&cpu_occupy->iowait,&cpu_occupy->irq,&cpu_occupy->softirq);
+                    /* utc时间字符串 */
+                    char timeStr[20];
+                    memset(timeStr, 0, sizeof(timeStr));
+                    sprintf(timeStr, "%d", timestamp);		// int
+                    sprintf(timeStr, "%ld", timestamp);		// long
+                    sprintf(timeStr, "%lld", timestamp);	// long long
 
-    fclose(fd);
-}
+                    /* utc时间字符串转换为整型 */
+                    int timeInt = atoi(timeStr);			// 转成整型 int
+                    long timeLong = atol(timeStr);			// 转成长整型 long
+                    long long timeLLong = atoll(timeStr);	// 转成长长整型 long long
 
-double get_sysCpuUsage()
-{
-    cpu_occupy_t cpu_stat1;
-    cpu_occupy_t cpu_stat2;
-    double cpu;
-    get_cpuoccupy((cpu_occupy_t *)&cpu_stat1);
-    sleep(1);
-    //第二次获取cpu使用情况
-    get_cpuoccupy((cpu_occupy_t *)&cpu_stat2);
-
-    //计算cpu使用率
-    cpu = cal_cpuoccupy ((cpu_occupy_t *)&cpu_stat1, (cpu_occupy_t *)&cpu_stat2);
-
-    return cpu;
-}
-
-int main(int argc,char **argv)
-{
-    while(1)
-    {
-        printf("CPU占用率:%f\n",get_sysCpuUsage());
-    }
-    return 0;
 }

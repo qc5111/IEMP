@@ -32,6 +32,17 @@ char * ReadLine(FILE * fp,char *Success){//此函数自动移动指针
     }
 
 }
+int GetCPUOC(unsigned int * Idle){
+    FILE *fp;
+    char buff[128];
+    unsigned int CPUData[6];
+
+    fp = fopen ("/proc/stat", "r");
+    fgets (buff, 128, fp);
+    fclose(fp);
+    sscanf (buff+4,"%u %u %u %u %u %u %u",&CPUData[0],&CPUData[1],&CPUData[2],Idle,&CPUData[3],&CPUData[4],&CPUData[5]);
+    return (CPUData[0]+CPUData[1]+CPUData[2]+CPUData[3]+CPUData[4]+CPUData[5]+*Idle);
+}
 class HeartBeat{
 private:
     char Status = 0;
@@ -45,13 +56,16 @@ public:
         char * SendData;
         char * Line;
         int SendLen=0;
-        long long int idle,kernel,user;
         float Result;
         struct sysinfo info;
         int cores;
         int Pos;
         char Success;
         struct utsname unameData;
+        unsigned int Idle,preIdle;
+        unsigned int OC,preOC;
+        float CPUUse;
+
         FILE *fp;
 
         SendData = (char *)malloc(1024);
@@ -91,13 +105,27 @@ public:
 
 
         uname(&unameData);
-        SendData[SendLen] = strlen(unameData.version);
+        Pos = SendLen;
+
+        SendData[Pos] = strlen(unameData.sysname)+1;
         SendLen++;
-        memcpy(SendData+SendLen,unameData.version,SendData[SendLen-1]);
-        SendLen += SendData[SendLen-1];
+        memcpy(SendData+SendLen,unameData.sysname,SendData[Pos]);
+        SendLen += SendData[Pos];
+        SendData[SendLen-1] = 32;
 
+        SendData[Pos] += strlen(unameData.nodename)+1;
+        memcpy(SendData+SendLen,unameData.nodename,strlen(unameData.nodename));
+        SendLen += (strlen(unameData.nodename)+1);
+        SendData[SendLen-1] = 32;
 
+        SendData[Pos] += strlen(unameData.release)+1;
+        memcpy(SendData+SendLen,unameData.release,strlen(unameData.release));
+        SendLen += (strlen(unameData.release)+1);
+        SendData[SendLen-1] = 32;
 
+        SendData[Pos] += strlen(unameData.machine);
+        memcpy(SendData+SendLen,unameData.machine,strlen(unameData.machine));
+        SendLen += (strlen(unameData.machine));
 
 
         fp = fopen(CPUPath,"r");
@@ -129,7 +157,6 @@ public:
 
             free(Line);
         }
-
         fclose(fp);
 
 
@@ -149,11 +176,29 @@ public:
         free(SendData);
         SendData = (char *)malloc(9);
         //GetSystemTimes(&preIdleTime, &preKernelTime, &preUserTime);
+        preOC = GetCPUOC(&preIdle);
         while(true){
+
             sleep(p->SleepTime);//120s
             if(p->Status == 0){
                 return 0;
             }
+            OC = GetCPUOC(&Idle);
+            if(OC == preOC){
+                CPUUse = 0;
+            }else{
+                CPUUse =1 - (Idle-preIdle)*1.0/(OC-preOC);
+            }
+            preIdle = Idle;
+            preOC = OC;
+            SendData[0] = 1;
+            sysinfo(&info);
+            Idle = (info.totalram-info.freeram)/1024/1024;;
+            memcpy(SendData+1,&CPUUse,4);
+            memcpy(SendData+5,&Idle,4);
+            UDP.SendData(SendData,9);
+
+
             /*GetSystemTimes(&idleTime, &kernelTime, &userTime);
             idle = CompareFileTime2(preIdleTime, idleTime);
             kernel = CompareFileTime2(preKernelTime, kernelTime);
@@ -173,15 +218,15 @@ public:
             UDP.SendData(SendData,9);*/
         }
     }
-    HeartBeat(int SleepTimeIn=1000){
+    HeartBeat(int SleepTimeIn=120){
         SleepTime = SleepTimeIn;
 
     }
-    void start(){
+    void Start(){
         Status = 1;
         pthread_create(&ThreadMainServer,NULL,MainServer,(void *)this);
     }
-    void close(){
+    void Close(){
         Status = 0;
     }
 

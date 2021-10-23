@@ -13,7 +13,7 @@ void DynamicPassword(unsigned char * code,int len,int timeDiff)//unsigned char *
 	unsigned char MD5Encrypted[16];
     unsigned char encrypt[20];
 	int i2 = 0;
-	int timestap = (int)((time(&t) + GLOBAL_TIME_DIFF)/ 30) + timeDiff;
+	int timestap = (int)(t/ 30) + timeDiff;
     memcpy(encrypt,Configs,16);
     memcpy(encrypt+16,&timestap,4);
     MD5_CTX md5;

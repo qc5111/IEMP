@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <time.h>
 #include <cstring>
+#include<sys/socket.h>
 #include <zlib.h>//apt install zlib1g-dev
 //全局变量
 static int GLOBAL_TIME_DIFF;
@@ -18,16 +19,16 @@ unsigned char Configs[32];//
 #include "md5.c" //Pass
 
 #include "gzip.cpp"
-//#include "FileOP.cpp"
+#include "FileOP.cpp"
 #include "DynamicPassword.c" //Pass
 //#include "RemoteCMD.cpp"
 //RemoteCMD RemoteCMD;
 #include "UDP.cpp" //Pass
 UDP UDP;
-//#include "CMDProc.cpp"
+#include "CMDProc.cpp"
 //#include "PerformanceMonitor.cpp"
 #include "HeartBeat.cpp"
 HeartBeat HeartBeat;
-//#include "TCPServer.cpp"
-//TcpServer TcpServer;
+#include "TCPServer.cpp"
+TcpServer TcpServer;
 #endif

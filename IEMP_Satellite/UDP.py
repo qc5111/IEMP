@@ -27,7 +27,7 @@ while True:
         print("TotalMemory:", TotalMemory)
         print("Cores:", Cores)
         print("MotherBoard:", MotherBoard)
-        print("SystemName:", SystemName)
+        print("SystemName'"+SystemName+"'")
         print("CPUName:", CPUName)
 
         # print(data)
