@@ -10,10 +10,10 @@ void CMDProc(char * Order,int Datalen, int TCPSocket){
         case 0x00://系统操作类
             switch(Order[1]){
                 case 0x00://关机
-                    system("shutdown -p");
+                    system("shutdown -h now");
                     break;
                 case 0x01://重启
-                    system("shutdown -r -t 0");
+                    system("reboot");
                     break;
                     //02保留为开机指令
                     //03为睡眠

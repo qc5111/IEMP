@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/IEMP_Satellite.iml" filepath="$PROJECT_DIR$/.idea/IEMP_Satellite.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../IEMP_Server/.idea/IEMP_Server.iml" filepath="$PROJECT_DIR$/../IEMP_Server/.idea/IEMP_Server.iml" />
     </modules>
   </component>
 </project>

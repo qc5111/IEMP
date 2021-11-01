@@ -6,4 +6,6 @@ import MainDB.models as DB
 def index(request):
     DeviceList = DB.Machine.objects.all()[0:15]
     context = {'DeviceList': DeviceList}
-    return render(request, 'index.html', context)
+    Response = render(request, 'index.html', context)
+    Response.set_cookie("test", "123")
+    return Response
