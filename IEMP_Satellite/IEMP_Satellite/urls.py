@@ -21,6 +21,10 @@ from . import BitTorrent
 from . import explorer
 from . import ajax
 from . import test
+from . import DeployInterface
+from .HearBeatServer import HeartBeatServer
+
+HeartBeatServer()
 urlpatterns = [
     path('', index.index),
     path('index', index.index),
@@ -30,5 +34,9 @@ urlpatterns = [
     path('explorer', explorer.explorer),
     path('GetFileList', ajax.GetFileList),
     path('RPC', BitTorrent.test),
+
+    path('GetRSAPubKey', DeployInterface.GetRSAPubKey),
+    path('RegNewDevice', DeployInterface.RegNewDevice),
     path('Test', test.test),
+
 ]

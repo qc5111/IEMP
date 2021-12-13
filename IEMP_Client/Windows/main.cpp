@@ -13,6 +13,8 @@ int GetTimeDiff(){
 }
 int main(int argc,char *argv[])//RealMain main
 {
+
+    printf("Version:%d\n",Version);
     //变量初始化
     int ret,DataLen;
     FILE *fp;
@@ -27,6 +29,7 @@ int main(int argc,char *argv[])//RealMain main
     //for(int i=0;i<32;i++){printf("%d,",i);printf("%02x\n",Configs[i]);}printf("\n");
     //读取IP
     IP.s_addr = Configs[20]+(Configs[21]<<8)+(Configs[22]<<16)+(Configs[23]<<24);
+    //UDP.Init(IP);
     UDP.Init(inet_ntoa(IP));
     //配置读取及初始化完成
     //初始化全局变量

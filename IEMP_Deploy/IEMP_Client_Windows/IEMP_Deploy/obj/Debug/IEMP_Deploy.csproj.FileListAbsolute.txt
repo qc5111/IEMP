@@ -7,3 +7,12 @@ C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\bin\Debug\IEMP_Deploy.exe
 C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\bin\Debug\IEMP_Deploy.pdb
 C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\obj\Debug\IEMP_Deploy.exe
 C:\Users\24773\source\repos\IEMP_Deploy\IEMP_Deploy\obj\Debug\IEMP_Deploy.pdb
+D:\Plymouth\COMP3000\IEMP\IEMP_Deploy\IEMP_Client_Windows\IEMP_Deploy\bin\Debug\IEMP_Deploy.exe
+D:\Plymouth\COMP3000\IEMP\IEMP_Deploy\IEMP_Client_Windows\IEMP_Deploy\bin\Debug\IEMP_Deploy.pdb
+D:\Plymouth\COMP3000\IEMP\IEMP_Deploy\IEMP_Client_Windows\IEMP_Deploy\obj\Debug\IEMP_Deploy.csproj.AssemblyReference.cache
+D:\Plymouth\COMP3000\IEMP\IEMP_Deploy\IEMP_Client_Windows\IEMP_Deploy\obj\Debug\IEMP_Deploy.Form1.resources
+D:\Plymouth\COMP3000\IEMP\IEMP_Deploy\IEMP_Client_Windows\IEMP_Deploy\obj\Debug\IEMP_Deploy.Properties.Resources.resources
+D:\Plymouth\COMP3000\IEMP\IEMP_Deploy\IEMP_Client_Windows\IEMP_Deploy\obj\Debug\IEMP_Deploy.csproj.GenerateResource.cache
+D:\Plymouth\COMP3000\IEMP\IEMP_Deploy\IEMP_Client_Windows\IEMP_Deploy\obj\Debug\IEMP_Deploy.csproj.CoreCompileInputs.cache
+D:\Plymouth\COMP3000\IEMP\IEMP_Deploy\IEMP_Client_Windows\IEMP_Deploy\obj\Debug\IEMP_Deploy.exe
+D:\Plymouth\COMP3000\IEMP\IEMP_Deploy\IEMP_Client_Windows\IEMP_Deploy\obj\Debug\IEMP_Deploy.pdb

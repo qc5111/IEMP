@@ -1,4 +1,4 @@
-
+{% load TemplateFunction %}
 <!doctype html>
 <style>
     .alert {
@@ -43,8 +43,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Amaze UI Admin table Examples</title>
-  <meta name="description" content="这是一个 table 页面">
+  <title>{{ Mlang.IndexTitle }}</title>
   <meta name="keywords" content="table">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="renderer" content="webkit">
@@ -56,14 +55,10 @@
   <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
-<!--[if lte IE 9]>
-<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
-  以获得更好的体验！</p>
-<![endif]-->
 
 <header class="am-topbar am-topbar-inverse admin-header">
   <div class="am-topbar-brand">
-    <strong>信息化设备管理平台</strong> <small>IEMP Satellite</small>
+    <strong>{{ Mlang.IEMPFullName }}</strong> <small>{{ Mlang.Satellite }}</small>
   </div>
 
 
@@ -81,7 +76,7 @@
   <div class="admin-content">
     <div class="admin-content-body">
       <div class="am-cf am-padding am-padding-bottom-0">
-        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">主机列表</strong> / <small>Host Lists</small></div>
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">{{ Mlang.HostList }}</strong></div>
       </div>
 
       <hr>
@@ -90,8 +85,8 @@
         <div class="am-u-sm-12 am-u-md-6">
           <div class="am-btn-toolbar">
             <div class="am-btn-group am-btn-group-xs">
-              <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
-              <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> {{ Mlang.AddNew }}</button>
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> {{ Mlang.Delete }}</button>
             </div>
           </div>
         </div>
@@ -106,13 +101,12 @@
               <thead>
               <tr>
                 <th class="table-check"><input type="checkbox" /></th>
-				<th class="table-id">ID</th><th class="table-title">名称</th>
-				<th class="table-type">地址</th>
-				<th class="table-type">类别</th>
-				<th class="table-author am-hide-sm-only">所有者</th>
-				<th class="table-type">状态</th>
-				<th class="table-date am-hide-sm-only">上次状态更新时间</th>
-				<th class="table-set">操作</th>
+				<th class="table-id">ID</th><th class="table-title">{{ Mlang.Name }}</th>
+				<th class="table-type">{{ Mlang.Address }}</th>
+				<th class="table-type">{{ Mlang.Type }}</th>
+				<th class="table-type">{{ Mlang.Status }}</th>
+				<th class="table-date am-hide-sm-only">{{ Mlang.LastUpdateDate }}</th>
+				<th class="table-set">{{ Mlang.Operation }}</th>
               </tr>
               </thead>
               <tbody>
@@ -123,20 +117,25 @@
                 <td>{{ Device.ID }}</td>
                 <td><a href="DeviceManagement?ID={{ Device.ID }}">{{ Device.Name}}</a></td>
 				<td>{{ Device.IP }}</td>
-                <td>{%if Device.Type == 0 %}电脑
-                    {%elif Device.Type == 1 %}手机
-                    {%elif Device.Type == 2 %}服务器
+                <td>{%if Device.Type == 0 %}{{ Mlang.Computer }}
+                    {%elif Device.Type == 1 %}{{ Mlang.MobilePhone }}
+                    {%elif Device.Type == 2 %}{{ Mlang.Server }}
+                    {%elif Device.Type == 3 %}{{ Mlang.Router }}
+                    {%elif Device.Type == 3 %}{{ Mlang.Unknown }}
                     {% endif %}
                 </td>
-                <td>{{ Device.User }}</td>
-				<td>开机</td>
-                <td>{{ Device.LastUpdateTime }}</td>
+				<td>{%if Device.Status == 0 %}{{ Mlang.Offline }}
+                    {%elif Device.Status == 1 %}{{ Device.UsingCPU |CalcCPUUse }}%, {{ Device.UsingMemory |CalcUsingMemory|filesizeformat}}/{{ Device.TotalMemory|filesizeformat }}
+                    {%elif Device.Status == 2 %}{{ Mlang.Busy }}
+                    {%elif Device.Status == 3 %}{{ Mlang.Unknown }}
+                    {% endif %}</td>
+                <td class="dt">{{Device.LastUpdateTime}}</td>
                 <td>
                   <div class="am-btn-toolbar">
                     <div class="am-btn-group am-btn-group-xs">
-                      <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="PowerOption('TurnOn',{{ Device.ID }})">开机</button>
-                      <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="PowerOption('TurnOff',{{ Device.ID }})">关机</button>
-                      <button type="button" class="am-btn am-btn-default am-btn-xs am-hide-sm-only">重启</button>
+                      <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="PowerOption('TurnOn',{{ Device.ID }})">{{ Mlang.TurnOn }}</button>
+                      <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="PowerOption('TurnOff',{{ Device.ID }})">{{ Mlang.TurnOff }}</button>
+                      <button type="button" class="am-btn am-btn-default am-btn-xs am-hide-sm-only">{{ Mlang.Reboot }}</button>
                     </div>
                   </div>
                 </td>
@@ -146,7 +145,6 @@
               </tbody>
             </table>
             <div class="am-cf">
-              共 2 条记录
               <div class="am-fr">
                 <ul class="am-pagination">
                   <li class="am-disabled"><a href="#">«</a></li>
@@ -196,6 +194,16 @@
 </body>
 </html>
 <script>
+
+    window.onload =function() {
+        let Timestaps=$(".dt")
+        for(let i = 0;i<Timestaps.length;i++){
+            let DT = new Date(Timestaps[i].innerText*1000)
+            console.log(DT)
+            Timestaps[i].innerText = DT.toLocaleString(undefined,{ hour12: false })
+        }
+
+    }
 function loadDoc() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {

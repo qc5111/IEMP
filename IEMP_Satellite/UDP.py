@@ -14,6 +14,8 @@ while True:
         Pos = 1
         EID = data[Pos:Pos + 4]
         Pos += 4
+        Version = struct.unpack("<I", data[Pos:Pos + 4])[0]
+        Pos += 4
         TotalMemory = struct.unpack("<Q", data[Pos:Pos + 8])[0]
         Pos += 8
         Cores = data[Pos] + data[Pos + 1] * 256
@@ -24,6 +26,7 @@ while True:
         Pos += 1 + data[Pos]
         CPUName = data[Pos + 1:Pos + 1 + data[Pos]].decode()
         print("EID:", EID)
+        print("Version",Version)
         print("TotalMemory:", TotalMemory)
         print("Cores:", Cores)
         print("MotherBoard:", MotherBoard)

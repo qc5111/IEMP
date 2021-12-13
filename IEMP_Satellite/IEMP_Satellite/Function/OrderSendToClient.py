@@ -1,3 +1,4 @@
+import time
 from socket import *
 from . import DynamicPassword
 import os
@@ -8,11 +9,9 @@ import datetime
 from ..settings import DefaultFilePath
 
 
-class WinClient:
-    IP = ""
-    Password = ""
-    RootPath = "C:\\IEMP_Client\\"
-    Encoding = "GB2312"
+class Client:
+    RootPath = ""
+    Encoding = ""
 
     def __init__(self, IP, Password):
         self.IP = IP
@@ -39,7 +38,7 @@ class WinClient:
             if FileData == b"":
                 break
             tcp_client_socket.send(FileData)
-        tcp_client_socket.recv(10)
+        # tcp_client_socket.recv(10)
         tcp_client_socket.close()
 
     def SendOneCMDOrder(self, order):
@@ -55,8 +54,32 @@ class WinClient:
         # self.NormalOrderSend(b'\x00\x06' + ('"%sTemp\\order.bat"' % TestClient.RootPath).encode(TestClient.Encoding))
         self.SendOneCMDOrder('"%sTemp\\order.bat"' % self.RootPath)
 
+    def StartNewProcess(self, order):
+        self.NormalOrderSend(b'\x00\x08' + order.encode(self.Encoding))
+
+    def ExitIEMP(self):
+        self.NormalOrderSend(b"\x02\x00")
+
     def SendFileToIEMPRoot(self, FilePath, RemoteSavePath):
         self.SendFile(FilePath, "%s%s" % (self.RootPath, RemoteSavePath))
+
+
+class WinClient(Client):
+    RootPath = "C:\\IEMP_Client\\"
+    Encoding = "GB2312"
+
+    def SelfRenew(self, FileName):
+        RenewScript = 'set ws=WScript.CreateObject("WScript.Shell")\n' \
+                      + 'wscript.sleep 500\n' \
+                      + 'Dim Fso,shell\n' \
+                      + 'Set Fso = WScript.CreateObject("Scripting.FileSystemObject")\n' \
+                      + 'Set shell = Wscript.createobject("wscript.shell")\n' \
+                      + 'Fso.DeleteFile"Update.vbs"\n' \
+                      + 'Fso.DeleteFile"IEMP_Client.exe"\n' \
+                      + 'Fso.MoveFile"IEMP_ClientNew.exe","IEMP_Client.exe"\n' \
+                      + 'shell.run "IEMP_Client.exe"\n'
+        self.SendFileToIEMPRoot("Win\\IEMP_Client_Latest.exe.file", "IEMP_ClientNew.exe")
+        self.NormalOrderSend(b'\x02\x01' + b"IEMP_ClientNew.exe" + b'\x00' + RenewScript.encode(self.Encoding))
 
     def Init7zip(self):  # 初始化7zip
         # self.NormalOrderSend(b'\x00\x06' + ('mkdir "%sTools\\"' % self.RootPath).encode(self.Encoding))

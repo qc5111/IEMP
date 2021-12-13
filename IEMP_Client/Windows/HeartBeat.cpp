@@ -73,6 +73,8 @@ public:
         SendLen++;
         memcpy(SendData+SendLen,EID,4);
         SendLen += 4;
+        memcpy(SendData+SendLen,&Version,4);//版本号
+        SendLen += 4;
         memStatus.dwLength = sizeof(memStatus);
         GlobalMemoryStatusEx(&memStatus);
         //printf("memStatus.ullTotalPhys:%lld\n",memStatus.ullTotalPhys);
@@ -88,7 +90,9 @@ public:
 
         UDP.SendData(SendData,SendLen);
         free(SendData);
-        SendData = (char *)malloc(9);
+        SendData = (char *)malloc(13);
+        SendData[0] = 1;//心跳事件
+        memcpy(SendData+1,EID,4);
         GetSystemTimes(&preIdleTime, &preKernelTime, &preUserTime);
         while(true){
             Sleep(p->SleepTime);//120s
@@ -106,15 +110,15 @@ public:
                 Result = 0;
             Result = 1.0*(kernel + user - idle) / (kernel + user);
             //printf("Result:%lf%\n",Result*100);
-            SendData[0] = 1;//心跳事件
+
             GlobalMemoryStatusEx(&memStatus);
-            memcpy(SendData+1,&Result,4);
+            memcpy(SendData+5,&Result,4);
             idle = (memStatus.ullTotalPhys-memStatus.ullAvailPhys)/1024/1024;
-            memcpy(SendData+5,&idle,4);
-            UDP.SendData(SendData,9);
+            memcpy(SendData+9,&idle,4);
+            UDP.SendData(SendData,13);
         }
     }
-    HeartBeat(int SleepTimeIn=1000){
+    HeartBeat(int SleepTimeIn=120000){
         SleepTime = SleepTimeIn;
 
     }

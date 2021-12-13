@@ -6,7 +6,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 
@@ -36,8 +38,67 @@ namespace IEMP_Deploy
             p.Close();
             return strOuput;
         }
+        public static String CreateGetHttpResponse(string url)
+        {
+            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+            request.Method = "GET";
+            Stream ResultStream = request.GetResponse().GetResponseStream();
+            StreamReader ResultReader = new StreamReader(ResultStream, Encoding.UTF8);
+            return ResultReader.ReadToEnd();
+
+            //return  as HttpWebResponse;
+        }
+
+
+        static public string RSA_Encrypt(string str_Plain_Text, out string str_Public_Key, out string str_Private_Key)
+        {
+            str_Public_Key = "";
+            str_Private_Key = "";
+            UnicodeEncoding ByteConverter = new UnicodeEncoding();
+            byte[] DataToEncrypt = ByteConverter.GetBytes(str_Plain_Text);
+            try
+            {
+                RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
+                str_Public_Key = Convert.ToBase64String(RSA.ExportCspBlob(false));
+                str_Private_Key = Convert.ToBase64String(RSA.ExportCspBlob(true));
+
+                //OAEP padding is only available on Microsoft Windows XP or later. 
+                byte[] bytes_Cypher_Text = RSA.Encrypt(DataToEncrypt, false);
+                str_Public_Key = Convert.ToBase64String(RSA.ExportCspBlob(false));
+                str_Private_Key = Convert.ToBase64String(RSA.ExportCspBlob(true));
+                string str_Cypher_Text = Convert.ToBase64String(bytes_Cypher_Text);
+                return str_Cypher_Text;
+            }
+            catch (CryptographicException e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
         private void button1_Click(object sender, EventArgs e)
         {
+            String PubKey = CreateGetHttpResponse("http://127.0.0.1:800/GetRSAPubKey");
+
+            //RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+            byte[] test = Convert.FromBase64String(PubKey);
+            String PubKey1,PriKey1;
+            RSA_Encrypt("Test", out PubKey1, out PriKey1);
+            Console.WriteLine(PubKey1);
+// rsa.ImportCspBlob(test);
+// Console.WriteLine(rsa.ExportCspBlob(false));
+
+            return;
             byte[] ConfigLocate;
 
             //Assembly assm = Assembly.GetExecutingAssembly();

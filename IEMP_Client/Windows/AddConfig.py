@@ -28,7 +28,6 @@ RemoteCMDAllow = 1
 #默认配置结束
 WriteData = b""
 WriteData += Code #写到第16位
-#写到第20位
 # print(IPPort2Bytes(ServerIP))
 WriteData += EID #写到第20位
 WriteData += IPPort2Bytes(ServerIP) #写到第24位

@@ -16,6 +16,7 @@ def TurnOn(request):
 
 def TurnOff(request):
     Device = DB.Machine.objects.get(ID=request.GET.get("ID"))
+    print(Device.IP, Device.Password)
     Client1 = WinClient(Device.IP, BytesAndString.HexString2Bytes(Device.Password))
     Client1.NormalOrderSend(b"\x00\x00")
     return HttpResponse("OK")

@@ -23,11 +23,18 @@ def recursion_urls(param, param1, urlpatterns, url_ordered_dict):
 
 class Client2Server:
     def __init__(self, ServerIP, ServerPort, EID):
+        _thread.start_new_thread(self.TrytoConnect, (ServerIP, ServerPort, EID))
+    def TrytoConnect(self,ServerIP, ServerPort,EID):
+        Success = False
         self.client = socket.socket()  # 创建一个客户端
-        self.client.connect((ServerIP, ServerPort))  # 连接服务端
-        self.client.send(EID)  # EID
-        _thread.start_new_thread(self.DataWait, (EID,))
-
+        while not Success:
+            try:
+                self.client.connect((ServerIP, ServerPort))  # 连接服务端
+                self.client.send(EID)  # EID
+                _thread.start_new_thread(self.DataWait, (EID,))
+                Success = True
+            except:
+                time.sleep(30)
     def dealItmes(self, Items):
         ItemDict = {}
         for key, value in Items():
