@@ -1,5 +1,5 @@
 import json
-import socket  # 网络编程需要用到socket模块
+import socket
 import struct
 import sys
 import time

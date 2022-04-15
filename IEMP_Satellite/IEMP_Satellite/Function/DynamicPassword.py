@@ -2,6 +2,8 @@ import hashlib
 import time
 import struct
 
+from IEMP_Satellite.Function import BytesAndString
+
 
 def DynamicPassword(encrypt, codelen):
     i2 = 0
@@ -9,7 +11,7 @@ def DynamicPassword(encrypt, codelen):
     timestap = int(int(time.time()) / 30)
     # print(timestap)
     # print(encrypt + struct.pack('<I', timestap))
-    MD5Encrypted = hashlib.md5(encrypt + struct.pack('<I', timestap)).digest()
+    MD5Encrypted = hashlib.md5(BytesAndString.HexString2Bytes(encrypt) + struct.pack('<I', timestap)).digest()
     # MD5Encrypted = list(MD5Encrypted)
     # print(MD5Encrypted)
     # print_hex(MD5Encrypted)

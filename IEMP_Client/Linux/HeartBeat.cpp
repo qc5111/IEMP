@@ -73,9 +73,9 @@ public:
         SendLen++;
         memcpy(SendData+SendLen,EID,4);
         SendLen += 4;
+        memcpy(SendData+SendLen,&Version,4);//版本号
+        SendLen += 4;
         sysinfo(&info);
-
-
         memcpy(SendData+SendLen,&info.totalram,8);
         SendLen += 8;
 
@@ -166,19 +166,14 @@ public:
         //    free(Line);
         //}
 
-
-
-
-
-
-
         UDP.SendData(SendData,SendLen);
         free(SendData);
-        SendData = (char *)malloc(9);
+        SendData = (char *)malloc(13);
+        SendData[0] = 1;//心跳事件
+        memcpy(SendData+1,EID,4);
         //GetSystemTimes(&preIdleTime, &preKernelTime, &preUserTime);
         preOC = GetCPUOC(&preIdle);
         while(true){
-
             sleep(p->SleepTime);//120s
             if(p->Status == 0){
                 return 0;
@@ -191,12 +186,12 @@ public:
             }
             preIdle = Idle;
             preOC = OC;
-            SendData[0] = 1;
+
             sysinfo(&info);
             Idle = (info.totalram-info.freeram)/1024/1024;;
-            memcpy(SendData+1,&CPUUse,4);
-            memcpy(SendData+5,&Idle,4);
-            UDP.SendData(SendData,9);
+            memcpy(SendData+5,&CPUUse,4);
+            memcpy(SendData+9,&Idle,4);
+            UDP.SendData(SendData,13);
 
 
             /*GetSystemTimes(&idleTime, &kernelTime, &userTime);

@@ -11,7 +11,7 @@
 #include<time.h>
 #pragma comment(lib,"ws2_32.lib")
 //全局变量
-int Version = 002; //0.0.1
+int Version = 002; //0.0.2
 static int GLOBAL_TIME_DIFF;
 char EID[4];//EquipmentID
 unsigned char Configs[32];

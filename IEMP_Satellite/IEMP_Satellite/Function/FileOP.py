@@ -46,62 +46,7 @@ class FileOP:
     def GetFile(self):
         tcp_client_socket = self.NormalOrderSend(b'\x01\x01')
 
-    def GetFileList(self, Path):
-        tcp_client_socket = self.NormalOrderSend(b'\x01\x02' + Path.encode(self.Encoding))
-        Data = ""
-        ByteArr = []
-        while Data != b"":
-            Data = tcp_client_socket.recv(1024)
-            # print(Data)
-            ByteArr.append(Data)
-        data = b"".join(ByteArr)
 
-        # print(len(data))
-        # print()
-        # print(len(data))
-        #print(data)
-        # print(data)
-        FileList = zlib.decompress(data)
-        #print(FileList)
-        # FileList = data
-        FileDictArr = []
-        Pos = 0
-        MaxPos = len(FileList)
-        # print(ByteArr)
-        while True:
-            #print(FileDictArr)
-            #print(FileList[Pos])
-            if Pos == MaxPos:
-                #print("Return")
-                return FileDictArr
-            if FileList[Pos] == 4:
-                Mtime = struct.unpack("<I", FileList[Pos + 1:Pos + 5])[0]
-                Pos += 4
-                FileDictArr.append(
-                    {"Type": 4, "Name": FileList[Pos + 2:Pos + 2 + FileList[Pos + 1]].decode(self.Encoding),
-                     "Mtime": Mtime})
-                Pos += FileList[Pos + 1] + 2
-            elif FileList[Pos] == 8:
-                # print(Pos,FileList[Pos+2:Pos+1+FileList[Pos+1]],FileList[Pos+1])
-                Mtime = struct.unpack("<I", FileList[Pos + 1:Pos + 5])[0]
-                Pos += 4
-                Size = \
-                    struct.unpack("<Q",
-                                  FileList[Pos + 2:Pos + 1 + FileList[Pos + 1]] + b"\x00" * (9 - FileList[Pos + 1]))[
-                        0]
-                Pos += FileList[Pos + 1]
-                FileDictArr.append(
-                    {"Type": 8, "Name": FileList[Pos + 2:Pos + 2 + FileList[Pos + 1]].decode(self.Encoding),
-                     "Mtime": Mtime, "Size": Size})
-                Pos += FileList[Pos + 1] + 2
-                # print(Size)
-            elif FileList[Pos] > 128:
-                FileDictArr.append(
-                    {"Type": FileList[Pos],
-                     "Name": FileList[Pos + 2:Pos + 2 + FileList[Pos + 1]].decode(self.Encoding)})
-                Pos += FileList[Pos + 1] + 2
-            # print(Pos,MaxPos)
-            # print(len(FileDictArr))
 
 
 """

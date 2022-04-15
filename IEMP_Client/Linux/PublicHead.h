@@ -11,6 +11,7 @@
 #include<sys/socket.h>
 #include <zlib.h>//apt install zlib1g-dev
 //全局变量
+int Version = 001; //0.0.1
 static int GLOBAL_TIME_DIFF;
 char EID[4];//EquipmentID
 unsigned char Configs[32];//

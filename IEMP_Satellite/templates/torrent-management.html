@@ -1,0 +1,372 @@
+{% load TemplateFunction %}
+<!doctype html>
+<style>
+    .alert {
+    display: none;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    min-width: 10px;
+    margin-left: -100px;
+    z-index: 99999;
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-info {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.alert-warning {
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+}
+.subButton{
+    width:100%
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+</style>
+
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{{ Mlang.IndexTitle }}</title>
+  <meta name="keywords" content="table">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <link rel="icon" type="image/png" href="assets/i/favicon.png">
+  <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+  <link rel="stylesheet" href="assets/css/amazeui.min.css"/>
+  <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+
+<header class="am-topbar am-topbar-inverse admin-header">
+  <div class="am-topbar-brand">
+    <strong>{{ Mlang.IEMPFullName }}</strong> <small>{{ Mlang.Satellite }}</small>
+  </div>
+
+
+  <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+
+  </div>
+</header>
+
+<div class="am-cf admin-main">
+
+
+  <!-- content start -->
+<div class="alert"></div>
+  <div class="admin-content">
+    <div class="admin-content-body">
+      <div class="am-cf am-padding am-padding-bottom-0">
+        <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">{{ Mlang.TorrentManagement }}</strong></div>
+      </div>
+
+      <hr>
+
+      <div class="am-g">
+        <div class="am-u-sm-12 am-u-md-4">
+          <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-xs">
+                <div class="am-btn-group am-btn-group-xs am-form-file">
+                        <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> {{ Mlang.AddTorrent }}</button><input id="AddTorrent" type="file" accept=".torrent" multiple>
+                </div>
+                <div class="am-btn-group am-btn-group-xs am-form-file">
+                        <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> {{ Mlang.UploadFile }}</button><input id="UploadFile" type="file" multiple>
+                </div>
+              <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> {{ Mlang.Delete }}</button>
+            </div>
+          </div>
+        </div>
+          <div class="am-u-sm-12 am-u-md-3">
+            <div id="progress" class="am-progress" style="height: 28px;" hidden="hidden">
+                <div id="bar" class="am-progress-bar" style="width: 0%;"><p id="percent" style="line-height: 28px;text-align: center">0%</p></div>
+            </div>
+          </div>
+          <div class="am-u-sm-12 am-u-md-3">
+          <div class="am-input-group am-input-group-sm">
+            <input id="FileStoragePath" type="text" placeholder="{{ Mlang.FileStoragePath }}" value="{{ FileStoragePath }}" class="am-form-field">
+          <span class="am-input-group-btn">
+            <button class="am-btn am-btn-default" type="button" onclick="SetPath()">{{ Mlang.SetPath }}</button>
+          </span>
+          </div>
+        </div>
+
+
+      </div>
+
+      <div class="am-g">
+        <div class="am-u-sm-12">
+          <form class="am-form">
+            <table class="am-table am-table-striped am-table-hover table-main">
+              <thead>
+              <tr>
+                <th class="table-check"><input type="checkbox" /></th>
+                <th class="table-title">{{ Mlang.Torrent }}</th>
+				<th class="table-type">{{ Mlang.FileName }}</th>
+				<th class="table-type">{{ Mlang.FileSize }}</th>
+				<th class="table-type">{{ Mlang.FileStatus }}</th>
+				<th class="table-date am-hide-sm-only">{{ Mlang.UpdateDate }}</th>
+				<th class="table-set">{{ Mlang.Operation }}</th>
+              </tr>
+              </thead>
+              <tbody id="TorrentList">
+              </tbody>
+            </table>
+            <div class="am-cf">
+              <div class="am-fr">
+                <ul class="am-pagination">
+                  <li class="am-disabled"><a href="#">«</a></li>
+                  <li class="am-active"><a href="#">1</a></li>
+                  <li><a href="#">2</a></li>
+                  <li><a href="#">3</a></li>
+                  <li><a href="#">4</a></li>
+                  <li><a href="#">5</a></li>
+                  <li><a href="#">»</a></li>
+                </ul>
+              </div>
+            </div>
+            <hr />
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="admin-content-footer">
+      <hr>
+      <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+    </footer>
+
+  </div>
+  <!-- content end -->
+</div>
+
+<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+
+<footer>
+  <hr>
+  <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+</footer>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/amazeui.min.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
+<script>
+function SetPath() {
+    let path = $("#FileStoragePath").val();
+    $.ajax({
+        url:"TorrentOP",
+        data:{"OP":"SetFileStoragePath","FileStoragePath":path},
+        type:"POST",
+        success:function(result){
+            if(result == "OK"){
+                AutoDisappearNotification("{{ Mlang.SetSuccessfully }}");
+            }
+
+    }});
+}
+$("#AddTorrent").on('change', function() {
+    let file = this.files[0];
+    let formData = new FormData();
+    formData.append("file", file);
+    $.ajax({
+        url:"AddTorrent",
+        data:formData,
+        type:"POST",
+        processData: false,
+        contentType: false,
+        success:function(result){
+            if(result === "OK"){
+                AutoDisappearNotification("{{ Mlang.AddSuccessfully }}");
+            }
+    }});
+})
+
+$("#UploadFile").on('change', function() {
+    let file = this.files[0];
+    let formData = new FormData();
+    formData.append("file", file);
+    $.ajax({
+        url:"UploadFile",
+        data:formData,
+        type:"POST",
+        processData: false,
+        contentType: false,
+        xhr: function xhr() {
+            //获取原生的xhr对象
+            var xhr = $.ajaxSettings.xhr();
+            if (xhr.upload) {
+                //添加 progress 事件监听
+                xhr.upload.addEventListener('progress', function (e) {
+                    //e.loaded 已上传文件字节数
+                    //e.total 文件总字节数
+                    var percentage = parseInt(e.loaded / e.total * 100)
+                    document.getElementById("progress").hidden = false;
+                    document.getElementById("bar").style.width = percentage + "%";
+                    document.getElementById("percent").innerText = percentage + "%";
+                    //$("#uploadProgress").html(percentage)
+                }, false);
+            }
+            return xhr;
+        },
+        success:function(result){
+            if(result === "OK"){
+                AutoDisappearNotification("{{ Mlang.UploadSuccessfully }}");
+                document.getElementById("progress").hidden = true;
+            }
+    }});
+})
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 B';
+    let k = 1024, // or 1024
+        sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+        i = Math.floor(Math.log(bytes) / Math.log(k));
+    return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
+}
+window.onload =function() {
+    $.ajax({
+        url:"AjaxGetTorrentList",
+        success:function(result){
+            let TorrentList = JSON.parse(result);
+            TorrentList.forEach(function (TorrentInfo){
+                let Status = "";
+                let Seeding = "{{ Mlang.StartSeeding }}";
+                let SeedingDisable = true;
+                let SeedingColour = "am-text-danger";
+                switch (TorrentInfo.Status){ //Status # 0正在做种，1文件完整，2文件损坏，3文件缺失，4正在检查
+                    case 0:
+                        Status = "{{ Mlang.IsSeeding }}";
+                        Seeding = "{{ Mlang.StopSeeding }}";
+                        SeedingDisable = false;
+                        break;
+                    case 1:
+                        Status = "{{ Mlang.FileComplete }}";
+                        SeedingDisable = false;
+                        SeedingColour = "am-text-success";
+                        break;
+                    case 2:
+                        Status = "{{ Mlang.FileBroken }}";
+                        break;
+                    case 3:
+                        Status = "{{ Mlang.FileMissing }}";
+                        break;
+                    case 4:
+                        Status = "{{ Mlang.Checking }}";
+                        break;
+                }
+                let DT = new Date(TorrentInfo.UpdateTime*1000)
+                UpdateTimeString = DT.toLocaleString(undefined,{ hour12: false })
+                let AutoSeeding = "";
+                let AutoSeedingColour = "";
+                if(TorrentInfo.AutoSeeding == true){
+                    AutoSeeding = "{{ Mlang.AutoSeedingOn }}";
+                    AutoSeedingColour = "am-text-success";
+                }else{
+                    AutoSeeding = "{{ Mlang.AutoSeedingOff }}";
+                    AutoSeedingColour = "am-text-danger";
+                }
+
+
+
+                let Table = `<tr>
+                <td><input type="checkbox" /></td>
+                <td><a href="TorrentDownload?info_hash=${TorrentInfo.info_hash}">${TorrentInfo.FileName}.torrent</a></td>
+                <td>${TorrentInfo.FileName}</td>
+				<td>${formatFileSize(TorrentInfo.FileSize)}</td>
+				<td>${Status}</td>
+                <td class="dt">${UpdateTimeString}</td>
+                <td>
+                  <div class="am-btn-toolbar">
+                    <div class="am-btn-group am-btn-group-xs">
+                      <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary ${AutoSeedingColour}" onclick="AutoSeedingChange(this,'${TorrentInfo.info_hash}')">${AutoSeeding}</button>
+                      <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary ${SeedingColour}" disable="${SeedingDisable}" onclick="ChangeSeeding(this,'${TorrentInfo.info_hash}')">${Seeding}</button>
+                      <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" disable="${SeedingDisable}" onclick="Check('${TorrentInfo.info_hash}')">{{ Mlang.Check }}</button>
+                      <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="DeleteTorrent('${TorrentInfo.info_hash}')">{{ Mlang.Delete }}</button>
+                    </div>
+                  </div>
+                </td>
+              </tr>`
+                $("#TorrentList").append(Table);
+            })
+        }
+    });
+
+    }
+
+
+function AutoSeedingChange(button,info_hash){
+    let AutoSeeding = true;
+    if(button.innerText === "{{ Mlang.AutoSeedingOn }}"){
+        button.innerText = "{{ Mlang.AutoSeedingOff }}";
+        button.className = "am-btn am-btn-default am-btn-xs am-text-danger am-text-secondary";
+        AutoSeeding = false;
+        }else{
+        button.innerText = "{{ Mlang.AutoSeedingOn }}";
+        button.className = "am-btn am-btn-default am-btn-xs am-text-success am-text-secondary";
+    }
+    $.ajax({
+        url:"TorrentOP",
+        data:{"OP":"AutoSeedingChange","info_hash":info_hash,"AutoSeeding":AutoSeeding},
+        type:"POST",
+        success:function(result){
+            if(result === "OK"){
+                AutoDisappearNotification("{{ Mlang.SetSuccessfully }}");
+            }
+    }});
+    console.log(info_hash);
+
+}
+function Check(info_hash){
+    $.ajax({
+        url:"TorrentOP",
+        data:{"OP":"Check","info_hash":info_hash},
+        type:"POST",
+        success:function(result){
+            if(result === "OK"){
+                AutoDisappearNotification("{{ Mlang.StartChecking }}");
+            }
+    }});
+}
+function AutoDisappearNotification(Content){
+    $('.alert').html(Content).addClass('alert-success').show().delay(1500).fadeOut();
+}
+</script>

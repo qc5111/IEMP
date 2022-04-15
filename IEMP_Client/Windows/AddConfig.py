@@ -14,7 +14,7 @@ def IPPort2Bytes(IP):
     return bytes.fromhex("".join(ReturnData))
 #默认配置开始
 Code = b"0123456789abcdef"
-ServerIP = "127.0.0.1"
+ServerIP = "10.0.5.123"
 EID = b"1234"
 #心跳汇报
 HeartBeatAuto = 1

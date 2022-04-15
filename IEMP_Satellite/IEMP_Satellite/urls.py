@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# from django.contrib import admin
+
 from django.urls import path
 from . import index
 from . import SystemOperation
@@ -22,18 +22,31 @@ from . import explorer
 from . import ajax
 from . import test
 from . import DeployInterface
-from .HearBeatServer import HeartBeatServer
+from . import console
+from .SoftInit import SoftInit
 
-HeartBeatServer()
+SoftInit()
+
 urlpatterns = [
     path('', index.index),
     path('index', index.index),
     path('SystemOperation/TurnOn', SystemOperation.TurnOn),
     path('SystemOperation/TurnOff', SystemOperation.TurnOff),
-    path('announce', BitTorrent.announce),
+    path('console', console.console),
+    path('consolews', console.Test),
+    path('Tracker', BitTorrent.Tracker),
+    path('TorrentManagement', BitTorrent.TorrentManagement),
+    path('AjaxGetTorrentList', BitTorrent.AjaxGetTorrentList),
+    path('TorrentOP', BitTorrent.TorrentOP),
+    path('UploadFile', BitTorrent.UploadFile),
+    path('TorrentDownload', BitTorrent.TorrentDownload),
+    path('CreateBT', BitTorrent.CreateBT),
+
+
+    path('AddTorrent', BitTorrent.AddTorrent),
     path('explorer', explorer.explorer),
     path('GetFileList', ajax.GetFileList),
-    path('RPC', BitTorrent.test),
+
 
     path('GetRSAPubKey', DeployInterface.GetRSAPubKey),
     path('RegNewDevice', DeployInterface.RegNewDevice),

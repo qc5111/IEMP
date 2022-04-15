@@ -37,6 +37,25 @@
     background-color: #f2dede;
     border-color: #ebccd1;
 }
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+}
+.subButton{
+    width:100%
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
 </style>
 
 <html class="no-js">
@@ -136,6 +155,14 @@
                       <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" onclick="PowerOption('TurnOn',{{ Device.ID }})">{{ Mlang.TurnOn }}</button>
                       <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="PowerOption('TurnOff',{{ Device.ID }})">{{ Mlang.TurnOff }}</button>
                       <button type="button" class="am-btn am-btn-default am-btn-xs am-hide-sm-only">{{ Mlang.Reboot }}</button>
+                        <div class="dropdown">
+                          <span><button type="button" class="am-btn am-btn-default am-btn-xs am-hide-sm-only">{{ Mlang.MoreOption }}</button></span>
+                          <div class="dropdown-content">
+                              <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary subButton" onclick="location='explorer?id={{ Device.ID }}'">{{ Mlang.FileManage }}</button>
+                              <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary subButton" onclick="location='console?EID={{ Device.ID }}'">{{ Mlang.Shell }}</button>
+                              <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary subButton" onclick="location='deleteDevice?id={{ Device.ID }}'">{{ Mlang.Delete }}</button>
+                          </div>
+                        </div>
                     </div>
                   </div>
                 </td>
@@ -180,15 +207,7 @@
   <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
 </footer>
 
-<!--[if lt IE 9]>
-<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
-<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
-<script src="assets/js/amazeui.ie8polyfill.min.js"></script>
-<![endif]-->
-
-<!--[if (gte IE 9)|!(IE)]><!-->
 <script src="assets/js/jquery.min.js"></script>
-<!--<![endif]-->
 <script src="assets/js/amazeui.min.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
@@ -199,7 +218,6 @@
         let Timestaps=$(".dt")
         for(let i = 0;i<Timestaps.length;i++){
             let DT = new Date(Timestaps[i].innerText*1000)
-            console.log(DT)
             Timestaps[i].innerText = DT.toLocaleString(undefined,{ hour12: false })
         }
 
@@ -218,7 +236,7 @@ function PowerOption(Operation,ID){
   var ajax = new XMLHttpRequest();
   ajax.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      AutoDisappearNotification("开机指令已发送");
+      AutoDisappearNotification("{{ Mlang.OrderSent }}");
     }
   };
   ajax.open("GET", "/SystemOperation/"+Operation+"?ID="+ID, true);

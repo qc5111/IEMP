@@ -82,10 +82,10 @@ DATABASES = {
         {
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'iemp_satellite',
-            'HOST': '10.0.1.4',
+            'HOST': '127.0.0.1',
             'PORT': 3306,
-            'USER': 'IEMP_Satellite',
-            'PASSWORD': 'yzjf7DshRkHcDxDp',
+            'USER': 'root',
+            'PASSWORD': '123456',
         }
 }
 
@@ -133,6 +133,8 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DefaultFilePath = os.getcwd() + "\\IEMP_Satellite\\Function\\Files\\"
+# DefaultFilePath = os.getcwd() + "\\IEMP_Satellite\\Function\\Files\\"
 
 MLang = Mutilang()
+ServerAddr = "http://10.0.5.123:800/"
+Events = {}

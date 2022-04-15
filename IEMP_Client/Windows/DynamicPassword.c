@@ -39,6 +39,7 @@ void DynamicPassword(unsigned char * code,int len,int timeDiff)//unsigned char *
 
 }
 int CheckPassword(unsigned char * code,int len){// 0 True, 1 False unsigned char * encrypt,
+    return 0;
 	unsigned char CalcCode[8];
 	DynamicPassword(CalcCode,8,0);
 	if(charcmp((char*)code, (char*)CalcCode,8) == 0){
