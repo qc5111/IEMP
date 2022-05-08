@@ -91,6 +91,28 @@
 
 
   <!-- content start -->
+
+
+
+<!-- 模态框 -->
+<div class="am-modal am-modal-alert" tabindex="-1" id="UploadModal">
+  <div class="am-modal-dialog">
+    <div class="am-modal-hd">{{ Mlang.UploadFile }}</div>
+
+    <div class="am-modal-bd">
+        <input id="AutoCreateTorrent" type="checkbox" value=""> {{ Mlang.AutoCreateTorrent }}</input>
+    </div>
+
+    <div class="am-modal-footer">
+        <div class="am-btn-group am-btn-group-xs am-form-file">
+            <button type="button" class="am-modal-btn" style="border: none;background-color:#f8f8f8" > {{ Mlang.Upload }}</button><input id="UploadFile" type="file" multiple>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- 模态框 -->
+
+
 <div class="alert"></div>
   <div class="admin-content">
     <div class="admin-content-body">
@@ -107,9 +129,8 @@
                 <div class="am-btn-group am-btn-group-xs am-form-file">
                         <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> {{ Mlang.AddTorrent }}</button><input id="AddTorrent" type="file" accept=".torrent" multiple>
                 </div>
-                <div class="am-btn-group am-btn-group-xs am-form-file">
-                        <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> {{ Mlang.UploadFile }}</button><input id="UploadFile" type="file" multiple>
-                </div>
+                <button type="button" class="am-btn am-btn-default" data-am-modal="{target: '#UploadModal'}"><span class="am-icon-plus"></span> {{ Mlang.UploadFile }}</button>
+
               <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> {{ Mlang.Delete }}</button>
             </div>
           </div>
@@ -180,6 +201,8 @@
 
 <a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
 
+
+
 <footer>
   <hr>
   <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
@@ -222,11 +245,12 @@ $("#AddTorrent").on('change', function() {
 })
 
 $("#UploadFile").on('change', function() {
+    $("#UploadModal").modal("close");
     let file = this.files[0];
     let formData = new FormData();
     formData.append("file", file);
     $.ajax({
-        url:"UploadFile",
+        url:"UploadFile?AutoCreateTorrent="+$("#AutoCreateTorrent")[0].checked,
         data:formData,
         type:"POST",
         processData: false,
@@ -295,17 +319,6 @@ window.onload =function() {
                 }
                 let DT = new Date(TorrentInfo.UpdateTime*1000)
                 UpdateTimeString = DT.toLocaleString(undefined,{ hour12: false })
-                let AutoSeeding = "";
-                let AutoSeedingColour = "";
-                if(TorrentInfo.AutoSeeding == true){
-                    AutoSeeding = "{{ Mlang.AutoSeedingOn }}";
-                    AutoSeedingColour = "am-text-success";
-                }else{
-                    AutoSeeding = "{{ Mlang.AutoSeedingOff }}";
-                    AutoSeedingColour = "am-text-danger";
-                }
-
-
 
                 let Table = `<tr>
                 <td><input type="checkbox" /></td>
@@ -317,7 +330,6 @@ window.onload =function() {
                 <td>
                   <div class="am-btn-toolbar">
                     <div class="am-btn-group am-btn-group-xs">
-                      <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary ${AutoSeedingColour}" onclick="AutoSeedingChange(this,'${TorrentInfo.info_hash}')">${AutoSeeding}</button>
                       <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary ${SeedingColour}" disable="${SeedingDisable}" onclick="ChangeSeeding(this,'${TorrentInfo.info_hash}')">${Seeding}</button>
                       <button type="button" class="am-btn am-btn-default am-btn-xs am-text-secondary" disable="${SeedingDisable}" onclick="Check('${TorrentInfo.info_hash}')">{{ Mlang.Check }}</button>
                       <button type="button" class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" onclick="DeleteTorrent('${TorrentInfo.info_hash}')">{{ Mlang.Delete }}</button>
@@ -354,6 +366,26 @@ function AutoSeedingChange(button,info_hash){
     }});
     console.log(info_hash);
 
+}
+function ChangeSeeding(TheButton,info_hash){
+    let StartSeeding = true;
+    if(TheButton.innerText==="{{ Mlang.StartSeeding }}") {
+        TheButton.innerText = "{{ Mlang.StopSeeding }}";
+        TheButton.className = "am-btn am-btn-default am-btn-xs am-text-danger am-text-secondary";
+    }else{
+        TheButton.innerText = "{{ Mlang.StartSeeding }}";
+        TheButton.className = "am-btn am-btn-default am-btn-xs am-text-success am-text-secondary";
+        StartSeeding = false;
+    }
+    $.ajax({
+        url:"TorrentOP",
+        data:{"OP":"ChangeSeeding","info_hash":info_hash,"StartSeeding":StartSeeding},
+        type:"POST",
+        success:function(result){
+            if(result === "OK"){
+                AutoDisappearNotification("{{ Mlang.SetSuccessfully }}");
+            }
+    }});
 }
 function Check(info_hash){
     $.ajax({

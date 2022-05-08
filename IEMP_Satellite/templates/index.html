@@ -72,6 +72,10 @@
   <meta name="apple-mobile-web-app-title" content="Amaze UI" />
   <link rel="stylesheet" href="assets/css/amazeui.min.css"/>
   <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/xterm/xterm.css" />
+    <script src="assets/xterm/xterm.js"></script>
+    <script src="assets/xterm/xterm-addon-fit.js"></script>
+    <script src="assets/js/console.js"></script>
 </head>
 <body>
 
@@ -79,7 +83,9 @@
   <div class="am-topbar-brand">
     <strong>{{ Mlang.IEMPFullName }}</strong> <small>{{ Mlang.Satellite }}</small>
   </div>
-
+    <div class="am-topbar-brand" style="float:right">
+        <a href="Logout" style="font-size: 10pt">{{ Mlang.LogOut }}</a>
+    </div>
 
   <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
 
@@ -91,6 +97,16 @@
 
 
   <!-- content start -->
+<!-- 模态框 -->
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="ConsoleModal">
+  <div id="terminal" class="am-modal-dialog" style="height: 80%; width: 80%">
+
+  </div>
+</div>
+
+
+<!-- 模态框       <div id="terminal" style="height: 80%; width: 80%"></div> -->
+<button onclick="Test()" hidden="hidden">Test</button>
 <div class="alert"></div>
   <div class="admin-content">
     <div class="admin-content-body">
@@ -213,8 +229,27 @@
 </body>
 </html>
 <script>
+    let TermConsole = ""
+function Test() {
+    $("#ConsoleModal").modal("open")
+    TermConsole = OpenConsole(1);
 
-    window.onload =function() {
+
+}
+function Test2() {
+    let TermDIV = document.getElementById('terminal1')
+    console.log(TermDIV.clientWidth)
+
+}
+
+$('#UploadModal').on('closed.modal.amui', function() {
+    console.log(TermConsole)
+    TermConsole.ws.close();
+    $("#terminal").html("");
+});
+
+
+window.onload =function() {
         let Timestaps=$(".dt")
         for(let i = 0;i<Timestaps.length;i++){
             let DT = new Date(Timestaps[i].innerText*1000)
@@ -246,4 +281,7 @@ function PowerOption(Operation,ID){
 function AutoDisappearNotification(Content){
     $('.alert').html(Content).addClass('alert-success').show().delay(1500).fadeOut();
 }
+
+    
+
 </script>

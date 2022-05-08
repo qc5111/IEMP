@@ -226,7 +226,10 @@ class Client:
             self.SendOneCMDOrder("chmod +x " + self.RootPath + Aria2cRootPath + Aria2cName)
             self.SendOneCMDOrder(self.RootPath + Aria2cRootPath + Aria2cName + " --conf-path=" + self.RootPath + Aria2cRootPath + "aria2.conf")
         else:
-            self.SendOneCMDOrder(self.RootPath + Aria2cRootPath + "Start.vbs")
+            if self.OPSystem == 0: #Windows
+                self.SendOneCMDOrder(self.RootPath + Aria2cRootPath + "Start.vbs")
+            elif self.OPSystem == 3: #WinPE
+                self.StartNewProcess(self.RootPath + Aria2cRootPath + Aria2cName + " --conf-path=" + self.RootPath + Aria2cRootPath + "aria2.conf")
 
     def Init7zip(self):  # 初始化7zip，只写了Windows
         # self.NormalOrderSend(b'\x00\x06' + ('mkdir "%sTools\\"' % self.RootPath).encode(self.Encoding))

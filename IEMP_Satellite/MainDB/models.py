@@ -20,11 +20,10 @@ class MachineAbstract(models.Model):
     CPUArch = models.CharField(max_length=8, default="")
     OPSystemName = models.CharField(max_length=64, default="")
     IP = models.CharField(max_length=15)  # 自动生成
-
     Password = models.CharField(max_length=32, default="30313233343536373839616263646566")
     RootUsername = models.CharField(max_length=32, default="root")
     RootPassword = models.CharField(max_length=40, default="")
-    Type = models.IntegerField()  # DeviceType # 操作系统类型
+    Type = models.IntegerField()  # DeviceType # DeviceType # 设备类型 0电脑 1手机 2服务器 3路由器 4未知
     # User = models.CharField(max_length=16)  # Device user or owner
     Status = models.IntegerField(default=-1)  # 0不在线，1在线，2繁忙，3未知
     # Encoding = models.CharField(max_length=16, default="UTF-8")  # 编码

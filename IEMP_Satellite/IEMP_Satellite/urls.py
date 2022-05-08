@@ -19,11 +19,11 @@ from . import index
 from . import SystemOperation
 from . import BitTorrent
 from . import explorer
-from . import ajax
 from . import test
 from . import DeployInterface
 from . import console
 from .SoftInit import SoftInit
+from . import Authorization
 
 SoftInit()
 
@@ -33,23 +33,26 @@ urlpatterns = [
     path('SystemOperation/TurnOn', SystemOperation.TurnOn),
     path('SystemOperation/TurnOff', SystemOperation.TurnOff),
     path('console', console.console),
-    path('consolews', console.Test),
-    path('Tracker', BitTorrent.Tracker),
+    # 种子操作
+    path('Tracker', BitTorrent.Tracker),  # 无须授权
     path('TorrentManagement', BitTorrent.TorrentManagement),
     path('AjaxGetTorrentList', BitTorrent.AjaxGetTorrentList),
     path('TorrentOP', BitTorrent.TorrentOP),
     path('UploadFile', BitTorrent.UploadFile),
     path('TorrentDownload', BitTorrent.TorrentDownload),
     path('CreateBT', BitTorrent.CreateBT),
-
-
     path('AddTorrent', BitTorrent.AddTorrent),
+    # 授权管理
+    path('Login', Authorization.Login),  # 无须授权
+    path('AjaxLogin', Authorization.AjaxLogin),  # 无须授权
+    path('Logout', Authorization.Logout),  # 无须授权
+
+    # 文件管理
     path('explorer', explorer.explorer),
-    path('GetFileList', ajax.GetFileList),
+    path('GetFileList', explorer.GetFileList),
 
-
-    path('GetRSAPubKey', DeployInterface.GetRSAPubKey),
-    path('RegNewDevice', DeployInterface.RegNewDevice),
-    path('Test', test.test),
+    path('GetRSAPubKey', DeployInterface.GetRSAPubKey),  # 无须授权
+    path('RegNewDevice', DeployInterface.RegNewDevice),  # 无须授权
+    path('Test', test.test),  # 无须授权
 
 ]

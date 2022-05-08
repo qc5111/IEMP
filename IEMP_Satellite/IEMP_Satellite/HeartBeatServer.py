@@ -50,18 +50,25 @@ class HeartBeatServer:
                 Pos += 1 + data[Pos]
                 CPUName = data[Pos + 1:Pos + 1 + data[Pos]].decode()
                 if DB.Machine.objects.filter(ID=EID).exists():
-                    NowMachine = DB.Machine(ID=EID, IP=addr[0], Version=Version, TotalMemory=TotalMemory, Cores=Cores,
+                    # print("Update")
+                    DB.Machine.objects.filter(ID=EID).update(IP=addr[0], Version=Version, TotalMemory=TotalMemory, Cores=Cores,
                                             MAC=GetMacFromIP(addr[0]),
                                             MotherBoardName=MotherBoard, OPSystemName=SystemName, CPUName=CPUName,
                                             Status=1,
                                             LastUpdateTime=int(time.time()))
+                    NowMachine = DB.Machine.objects.get(ID=EID)
                     NowMachine.save()
+                else:
+                    NowMachine = DB.NoEIDMachine(IP=addr[0], Version=Version, TotalMemory=TotalMemory, Cores=Cores,
+                                                 MAC=GetMacFromIP(addr[0]),
+                                                 MotherBoardName=MotherBoard, OPSystemName=SystemName, CPUName=CPUName,
+                                                 Status=1,
+                                                 LastUpdateTime=int(time.time()))
 
                 ExcuteEvent("EquipmentOnline", NowMachine)
 
 
             elif data[0] == 1:
-                print(len(data))
                 if len(data) != 13:
                     continue
                 EID = struct.unpack("<I", data[1:5])[0]

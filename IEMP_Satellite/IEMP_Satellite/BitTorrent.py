@@ -9,6 +9,8 @@ import MainDB.models as DB
 from django.shortcuts import render
 from pyaria2 import Aria2RPC
 
+from .Authorization import AuthorizationCheck
+from .EventReg import ExcuteEvent
 from .Function.Torrent.torrent import Torrent
 from .settings import MLang, ServerAddr
 
@@ -82,6 +84,26 @@ def ReadFile(file_name, chunk_size=16384):
                 break
 
 
+def GetActive(IP):
+    return Aria2RPC("http://%s:48290/rpc" % IP).tellActive()
+
+
+def GetRemotePathFromInfoHash(IP, info_hash):
+    Actives = GetActive(IP)
+    for Active in Actives:
+        if Active["infoHash"] == info_hash:
+            return Active['files'][0]['path']
+    return ""
+
+
+def GetGIDFromInfoHash(IP, info_hash):
+    Actives = GetActive(IP)
+    for Active in Actives:
+        if Active["infoHash"] == info_hash:
+            return Active['gid']
+    return ""
+
+
 def CreateDownload(IP, info_hash):
     jsonrpc = Aria2RPC("http://%s:48290/rpc" % IP)
     FileStoragePath = DB.SateliteInfo.objects.get(Name="FileStoragePath")
@@ -90,6 +112,15 @@ def CreateDownload(IP, info_hash):
     Fr.close()
     DownloadID = jsonrpc.addTorrent(TorrentRawData)
     return DownloadID
+
+
+def DeleteDownload(IP, info_hash):
+    GID = GetGIDFromInfoHash(IP, info_hash)
+    if GID:
+        Aria2RPC("http://%s:48290/rpc" % IP).remove(GID)
+        return True
+    else:
+        return False
 
 
 def CheckExpiredPeer():
@@ -123,8 +154,7 @@ def Tracker(request):
         if SourceDict["event"] == "started":
             SourceDict["Status"] = 1
         elif SourceDict["event"] == "completed":  # seeding
-            print("completed")
-            print(SourceDict["IP"])
+            ExcuteEvent("BTDownloadComplete", SourceDict["IP"], SourceDict["info_hash"])
             SourceDict["Status"] = 2
         else:
             SourceDict["Status"] = 0
@@ -132,7 +162,6 @@ def Tracker(request):
         SourceDict["Status"] = -1  # 状态不变
     SourceDict["IPAndPort"] = IPPort2Str(SourceDict["IP"], SourceDict["port"])
     DBresult = DB.TrackerClientList.objects.filter(peer_id=SourceDict["peer_id"])
-
 
     """
     # 判断并注册服务器
@@ -205,6 +234,7 @@ def Tracker(request):
     return HttpResponse(bencoding.encode(ReturnValue, "ASCII"))
 
 
+@AuthorizationCheck
 def AddTorrent(request):
     # 文件上传
     FileStoragePath = DB.SateliteInfo.objects.get(Name="FileStoragePath")
@@ -230,6 +260,7 @@ def AddTorrent(request):
     return HttpResponse("OK")
 
 
+@AuthorizationCheck
 def AjaxGetTorrentList(request):
     # 获取种子列表
     TorrentList = DB.TorrentList.objects.all()
@@ -238,6 +269,7 @@ def AjaxGetTorrentList(request):
     return HttpResponse(json.dumps(TorrentList))
 
 
+@AuthorizationCheck
 def TorrentOP(request):
     OP = request.POST.get('OP')
     if OP == "AutoSeedingChange":
@@ -252,9 +284,20 @@ def TorrentOP(request):
         DB.SateliteInfo.objects.filter(Name="FileStoragePath").update(Value=request.POST.get('FileStoragePath'))
     elif OP == "Check":
         _thread.start_new_thread(CheckTorrentThread, (request.POST.get('info_hash'),))
+    elif OP == "ChangeSeeding":
+        if request.POST.get('StartSeeding') == "true":
+            CreateDownload("127.0.0.1", request.POST.get('info_hash'))
+            # 更新数据库
+            DB.TorrentList.objects.filter(info_hash=request.POST.get('info_hash')).update(Status=0)
+        else:
+            DeleteDownload("127.0.0.1", request.POST.get('info_hash'))
+            # 更新数据库
+            DB.TorrentList.objects.filter(info_hash=request.POST.get('info_hash')).update(Status=1)
+
     return HttpResponse("OK")
 
 
+@AuthorizationCheck
 def TorrentManagement(request):
     FileStoragePath = DB.SateliteInfo.objects.get(Name="FileStoragePath")
     context = {"FileStoragePath": FileStoragePath.Value, "Mlang": MLang.GetLang(request.LANGUAGE_CODE)}
@@ -262,6 +305,7 @@ def TorrentManagement(request):
     return Response
 
 
+@AuthorizationCheck
 def UploadFile(request):
     # 文件上传
     FileStoragePath = DB.SateliteInfo.objects.get(Name="FileStoragePath")
@@ -269,9 +313,20 @@ def UploadFile(request):
     for chunk in request.FILES["file"].chunks():
         Fw.write(chunk)
     Fw.close()
+    if request.GET.get('AutoCreateTorrent') == "true":  # 自动生成种子
+        TorrentFile = Torrent()
+        TorrentFile.Create(FileStoragePath.Value + "/" + request.FILES["file"].name, ServerAddr + "Tracker",
+                           Private=True, source="IEMP")
+        info_hash = TorrentFile.GetInfoHash()
+        TorrentFile.Save(FileStoragePath.Value + "/Torrents/" + info_hash + ".torrent")
+        # 添加到数据库
+        DB.TorrentList(info_hash=info_hash,
+                       FileName=TorrentFile.GetFileName(), FileSize=TorrentFile.GetFileSize(), Status=1,
+                       UpdateTime=int(time.time())).save()
     return HttpResponse("OK")
 
 
+@AuthorizationCheck
 def TorrentDownload(request):
     info_hash = request.GET.get('info_hash')
     FileStoragePath = DB.SateliteInfo.objects.get(Name="FileStoragePath")
@@ -283,6 +338,9 @@ def TorrentDownload(request):
     return response
 
 
+@AuthorizationCheck
 def CreateBT(request):
     CreateDownload(request.GET.get('IP'), request.GET.get('info_hash'))
     return HttpResponse("OK")
+
+

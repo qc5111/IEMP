@@ -82,7 +82,7 @@ class WebSocket2SSH:
             Command = SSHInterface(Machine.IP, 22, Machine.RootUsername, Machine.RootPassword, websocket)
         elif Machine.OPSystem == 0:  # Windows
             Command = CMDInterface(Machine.IP, 48281,
-                                   DynamicPassword.DynamicPassword("0123456789abcdef".encode(), 8) + "cmd.exe".encode(
+                                   DynamicPassword.DynamicPassword("0123456789abcdef", 8) + "cmd.exe".encode(
                                        "GB2312"), websocket)
         async for message in websocket:
             try:
